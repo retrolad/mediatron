@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset-001-add-movie-schema.sql
+  - include:
+      file: db/changelog/changeset-002-add-genre-schema.sql
+  - include:
+      file: db/changelog/changeset-003-add-movie-genres-schema.sql
