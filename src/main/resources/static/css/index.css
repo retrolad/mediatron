@@ -1,0 +1,96 @@
+:root {
+    --section-height: 20vh; /* высота видимой секции; уменьшите для большей видимости соседей */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* никаких скроллбаров */
+    color: white;
+    font-family: system-ui, sans-serif;
+    background: #111827;
+}
+
+/*** КАРУСЕЛЬ  ***/
+/* Контейнер со всеми секциями */
+#carousel {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+}
+
+/* Каждая секция-года — теперь меньше высотой, чтобы видны были соседи */
+.year-section {
+    width: 100%;
+    height: var(--section-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.year {
+    font-size: 6.5rem;
+    font-weight: 800;
+    opacity: 0.3;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.year.active {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* соседние элементы — немного меньше и в глубину */
+.year.prev,
+.year.next {
+    opacity: 0.35;
+    transform: translateZ(-40px) scale(0.8) rotateX(2deg);
+    z-index: 1;
+}
+.year.prev-prev,
+.year.next-next {
+    opacity: 0.15;
+    z-index: 1;
+}
+
+/* можно чуть сместить сверху/снизу для усиления перспективы */
+.year.prev { transform: translateY(-4%) translateZ(-40px) scale(0.8) rotateX(7deg); }
+.year.next { transform: translateY(4%) translateZ(-40px) scale(0.8) rotateX(-7deg); }
+
+/* можно чуть сместить сверху/снизу для усиления перспективы */
+.year.prev-prev {
+    transform: translateY(-7%) translateZ(-70px) scale(0.5) rotateX(17deg);
+}
+.year.next-next {
+    transform: translateY(7%) translateZ(-70px) scale(0.5) rotateX(-17deg);
+}
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Небольшая тень/разделение между секциями для видимости */
+.year-section + .year-section {
+    margin-top: 0.5rem;
+}
+
+/*** СПИСОК ФИЛЬМОВ ***/

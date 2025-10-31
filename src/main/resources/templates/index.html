@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор года — Моя фильмотека</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+
+    <link rel="stylesheet" th:href="@{/css/index.css}"></link>
+</head>
+<body class="bg-gray-900">
+
+<div class="grid grid-cols-12 h-screen">
+    <!-- Левая колонка: карусель -->
+    <div class="col-span-4 relative border-r border-neutral-800 flex items-center justify-center">
+        <div id="carousel" class="fade-in">
+            <div th:each="y, iter : ${years}"
+                 th:data-year="${y}"
+                 class="year-section">
+                <div class="year font-mono"
+                     th:text="${y}"
+                     hx-get="/movies-list"
+                     th:attr="hx-get=@{/movies-list(year=${y})}"
+                     hx-target="#movies-list"
+                     hx-swap="innerHTML">
+                </div>
+            </div>
+        </div>
+        <div class="hint">Колесо мыши ↑↓ или стрелки ↑↓</div>
+    </div>
+    <div id="movies-list" class="col-span-8 p-8 overflow-y-auto">
+        <div class="text-neutral-400 text-center">
+            Выберите год, чтобы увидеть фильмы
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/carousel.js}"></script>
+
+</body>
+</html>
