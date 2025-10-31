@@ -1,4 +1,3 @@
-// Обновлённый скрипт для стабильного центрирования секции
 const carousel = document.getElementById('carousel');
 let sections = [];
 let years = [];
@@ -11,7 +10,7 @@ function updateLists() {
     // повесить клики, если нужно
     years.forEach((y, idx) => {
         y.removeEventListener('click', y._clickHandler);
-        y._clickHandler = () => showSection(idx);
+        y._clickHandler = () => showSection(idx, true);
         y.addEventListener('click', y._clickHandler);
     });
 }
@@ -38,7 +37,7 @@ function applyNeighborClasses() {
     })
 }
 
-function showSection(i) {
+function showSection(i, skipClickDispatch = false) {
     updateLists();
     if (i < 0 || i >= sections.length) return;
     if (isScrolling) return;
@@ -57,12 +56,18 @@ function showSection(i) {
     carousel.style.transform = `translateY(${desiredTranslate}px)`;
 
     applyNeighborClasses();
+
+    if(!skipClickDispatch && years[i]) {
+        years[i].dispatchEvent(new Event('click'));
+    }
     setTimeout(() => isScrolling = false, 450);
 }
 
-// инициализация
-updateLists();
-showSection(0);
+// инициализация, ждем загрузки HTMX
+document.addEventListener("htmx:load", () => {
+    updateLists();
+    showSection(index);
+});
 
 // колесо
 window.addEventListener('wheel', (e) => {
