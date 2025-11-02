@@ -1,18 +1,19 @@
 :root {
-    --section-height: 20vh; /* высота видимой секции; уменьшите для большей видимости соседей */
+    --section-height: 20vh;
 }
 
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* никаких скроллбаров */
+    overflow: hidden;
     color: white;
     font-family: system-ui, sans-serif;
     background: #111827;
 }
 
 /*** КАРУСЕЛЬ  ***/
+
 /* Контейнер со всеми секциями */
 #carousel {
     width: 100%;
@@ -21,7 +22,6 @@ html, body {
     will-change: transform;
 }
 
-/* Каждая секция-года — теперь меньше высотой, чтобы видны были соседи */
 .year-section {
     width: 100%;
     height: var(--section-height);
@@ -45,7 +45,6 @@ html, body {
     transform: scale(1.05);
 }
 
-/* соседние элементы — немного меньше и в глубину */
 .year.prev,
 .year.next {
     opacity: 0.35;
@@ -94,3 +93,11 @@ html, body {
 }
 
 /*** СПИСОК ФИЛЬМОВ ***/
+
+/* Плавное появление/исчезновение содержимого в #movies-list */
+.fade-target {
+    transition: opacity 250ms ease-in;
+    opacity: 1;
+}
+.fade-out { opacity: 0; }
+.fade-in  { opacity: 1; }
