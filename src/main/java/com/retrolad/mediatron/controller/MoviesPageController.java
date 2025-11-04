@@ -19,7 +19,7 @@ public class MoviesPageController {
     @GetMapping("/")
     public String getMoviesPage(Model model) {
         model.addAttribute("years", movieService.getAll().stream()
-                .map(MovieDto::releaseYear)
+                .map(MovieDto::year)
                 .sorted()
                 .distinct()
                 .toList());

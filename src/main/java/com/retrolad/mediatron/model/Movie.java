@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,45 +22,37 @@ import java.util.Set;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(nullable = false)
-    private String title;
+    private int id;
 
     @Column(nullable = false)
     private String originalTitle;
 
     @Column(nullable = false)
-    private int releaseYear;
-
-    private String description;
-
-    private Integer kinopoiskId;
-
-    private Integer imdbId;
-
-    private Short oscarCount;
-
-    private Float kinopoiskRating;
-
-    private Float imdbRating;
-
-    private Float interestGroupRating;
+    private int year;
 
     @Column(nullable = false)
-    private String director;
+    private int runtime;
 
-    @Column(nullable = false)
-    private short duration;
+    private String ratingMpaa;
 
-    @ManyToMany
-    @JoinTable(
-            name = "movie_genres",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
-    @JsonManagedReference
-    private Set<Genre> genres = new HashSet<>();
+    private Short ageRating;
+
+    private Long budget;
+
+    private String originalLanguage;
+
+    private LocalDate releaseDate;
+
+    private LocalDateTime createdAt;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "movie_genres",
+//            joinColumns = @JoinColumn(name = "movie_id"),
+//            inverseJoinColumns = @JoinColumn(name = "genre_id")
+//    )
+//    @JsonManagedReference
+//    private Set<Genre> genres = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -70,11 +65,5 @@ public class Movie {
     @Override
     public int hashCode() {
         return Long.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Movie{id=%d, title='%s', originalTitle='%s', releaseYear=%d, director='%s', duration=%d}",
-                id, title, originalTitle, releaseYear, director, duration);
     }
 }

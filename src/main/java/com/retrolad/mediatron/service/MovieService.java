@@ -20,7 +20,7 @@ public class MovieService {
     }
 
     public List<MovieDto> getByYear(int year) {
-        return movieRepository.getMoviesByReleaseYear(year).stream()
+        return movieRepository.getMoviesByYear(year).stream()
                 .map(MovieMapper::toDto)
                 .toList();
     }
