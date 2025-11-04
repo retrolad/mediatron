@@ -1,17 +1,17 @@
 package com.retrolad.mediatron.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "movie")
@@ -44,6 +44,10 @@ public class Movie {
     private LocalDate releaseDate;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "langCode")
+    private Map<String, MovieTranslation> translations = new HashMap<>();
 
 //    @ManyToMany
 //    @JoinTable(
