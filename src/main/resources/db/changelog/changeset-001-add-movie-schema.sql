@@ -3,8 +3,7 @@
 --changeset retrolad:1
 create table if not exists movie
 (
-    id serial primary key,
-    tmdb_id bigint unique not null,
+    id bigint primary key not null,         -- tmdb id
     original_title varchar(255) not null,
     year integer not null,                  -- год релиза
     runtime integer not null,               -- продолжительность в минутах

@@ -23,9 +23,6 @@ public class Movie {
     private int id;
 
     @Column(nullable = false)
-    private int tmdbId;
-
-    @Column(nullable = false)
     private String originalTitle;
 
     @Column(nullable = false)
