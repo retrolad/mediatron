@@ -6,9 +6,12 @@
     </div>
 
     <div th:each="m : ${movies}" class="p-4 rounded-2xl bg-neutral-900 hover:bg-neutral-800 transition">
-        <span class="text-xl font-medium" th:text="${m.originalTitle()}"></span>
+        <span class="text-xl font-medium" th:text="${m.title}"></span>
         <span class="ml-2 text-neutral-400 italic" th:text="${m.originalTitle}"></span>
         <div class="flex gap-4 mt-2 text-sm text-neutral-500">
+            <div class="text-sm text-neutral-400" >
+                <span class="mr-2" th:each="g : ${m.genres()}" th:text="${g}"></span>
+            </div>
             <div class="text-sm text-neutral-400" >
                 <span th:if="${m.ratingMpaa() != null}" th:text="${m.ratingMpaa().toUpperCase()}"></span>
                 <span th:if="${m.ageRating() != null}" th:text="${m.ageRating()} + '+'"></span>

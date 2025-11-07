@@ -12,16 +12,20 @@ import java.util.List;
 public class MovieService {
 
     private MovieRepository movieRepository;
+    private static final String DEFAULT_LANG = "ru";
 
-    public List<MovieDto> getAll() {
-        return movieRepository.findAll().stream()
-                .map(MovieMapper::toDto)
+    public List<Integer> getAllYears() {
+        return movieRepository.findAllYears();
+    }
+
+    public List<MovieDto> getByYear(Integer year) {
+        return movieRepository.findByYearWithTranslation(year, DEFAULT_LANG).stream()
+                .map(m -> MovieMapper.toDto(m, DEFAULT_LANG))
                 .toList();
     }
 
-    public List<MovieDto> getByYear(int year) {
-        return movieRepository.getMoviesByYear(year).stream()
-                .map(MovieMapper::toDto)
-                .toList();
+    public MovieDto getById(Long id, String lang) {
+        return movieRepository.findByIdWithTranslation(id, lang)
+                .map(m -> MovieMapper.toDto(m, lang)).orElseThrow();
     }
 }

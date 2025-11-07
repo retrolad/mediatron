@@ -1,26 +1,24 @@
 package com.retrolad.mediatron.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "movie")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
+@ToString
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String originalTitle;
@@ -47,21 +45,21 @@ public class Movie {
     @MapKey(name = "langCode")
     private Map<String, MovieTranslation> translations = new HashMap<>();
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "movie_genres",
-//            joinColumns = @JoinColumn(name = "movie_id"),
-//            inverseJoinColumns = @JoinColumn(name = "genre_id")
-//    )
-//    @JsonManagedReference
-//    private Set<Genre> genres = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    @JsonManagedReference
+    private Set<Genre> genres = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (getClass() != o.getClass()) return false;
         Movie other = (Movie) o;
-        return id == other.id;
+        return Objects.equals(id, other.id);
     }
 
     @Override

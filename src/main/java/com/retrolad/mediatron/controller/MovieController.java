@@ -3,10 +3,7 @@ package com.retrolad.mediatron.controller;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -20,5 +17,8 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getByYear(year));
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam String lang) {
+        return ResponseEntity.ok(movieService.getById(id, lang));
+    }
 }

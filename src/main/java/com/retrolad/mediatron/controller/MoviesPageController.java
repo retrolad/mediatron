@@ -1,6 +1,5 @@
 package com.retrolad.mediatron.controller;
 
-import com.retrolad.mediatron.dto.MovieDto;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,11 +17,8 @@ public class MoviesPageController {
 
     @GetMapping("/")
     public String getMoviesPage(Model model) {
-        model.addAttribute("years", movieService.getAll().stream()
-                .map(MovieDto::year)
-                .sorted()
-                .distinct()
-                .toList());
+        model.addAttribute("years", movieService.getAllYears()
+                .stream().sorted());
         return "index";
     }
 
