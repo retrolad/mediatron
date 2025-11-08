@@ -1,7 +1,6 @@
-package com.retrolad.mediatron.service;
+package com.retrolad.mediatron.mapper;
 
 import com.retrolad.mediatron.dto.MovieDto;
-import com.retrolad.mediatron.model.Genre;
 import com.retrolad.mediatron.model.Movie;
 
 public class MovieMapper {
@@ -18,7 +17,7 @@ public class MovieMapper {
                 movie.getRatingMpaa(),
                 movie.getAgeRating(),
                 movie.getGenres().stream()
-                        .map(Genre::getName)
+                        .map(g -> GenreMapper.toDto(g, lang))
                         .toList()
         );
     }

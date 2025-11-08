@@ -1,6 +1,7 @@
 package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.MovieDto;
+import com.retrolad.mediatron.mapper.MovieMapper;
 import com.retrolad.mediatron.repository.MovieRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
