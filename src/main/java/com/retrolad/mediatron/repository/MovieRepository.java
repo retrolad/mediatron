@@ -19,16 +19,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("""
     SELECT DISTINCT m FROM Movie m
-    LEFT JOIN MovieTranslation t
-    ON m.id = t.id.movieId
-    WHERE t.langCode = :lang AND m.year = :year
+    JOIN FETCH m.translations t
+    WHERE m.year = :year and t.id.langCode = :lang
     """)
     List<Movie> findByYearWithTranslation(@Param("year") int year, @Param("lang") String lang);
 
     @Query("""
     SELECT m FROM Movie m
-    LEFT JOIN MovieTranslation t
-    ON m.id = t.id.movieId
+    JOIN FETCH m.translations t
     WHERE t.langCode = :lang and m.id = :id
     """)
     Optional<Movie> findByIdWithTranslation(@Param("id") Long id, @Param("lang") String lang);

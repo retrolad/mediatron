@@ -41,7 +41,7 @@ public class Movie {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "langCode")
     private Map<String, MovieTranslation> translations = new HashMap<>();
 
