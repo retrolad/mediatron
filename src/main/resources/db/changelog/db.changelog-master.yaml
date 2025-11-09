@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changeset-003-add-movie-translation-schema.sql
   - include:
       file: db/changelog/changeset-004-add-genre-schema.sql
+  - include:
+      file: db/changelog/changeset-005-add-country-schema.sql

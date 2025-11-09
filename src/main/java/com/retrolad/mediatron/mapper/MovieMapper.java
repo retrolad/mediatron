@@ -18,6 +18,9 @@ public class MovieMapper {
                 movie.getAgeRating(),
                 movie.getGenres().stream()
                         .map(g -> GenreMapper.toDto(g, lang))
+                        .toList(),
+                movie.getProductionCountries().stream()
+                        .map(c -> CountryMapper.toDto(c, lang))
                         .toList()
         );
     }

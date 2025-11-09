@@ -54,6 +54,14 @@ public class Movie {
     @JsonManagedReference
     private Set<Genre> genres = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "movie_country",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id")
+    )
+    private Set<ProductionCountry> productionCountries = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
