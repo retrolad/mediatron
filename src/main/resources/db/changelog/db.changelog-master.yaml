@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/changeset-004-add-genre-schema.sql
   - include:
       file: db/changelog/changeset-005-add-country-schema.sql
+  - include:
+      file: db/changelog/changeset-006-add-source-schema.sql

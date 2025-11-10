@@ -21,7 +21,10 @@ public class MovieMapper {
                         .toList(),
                 movie.getProductionCountries().stream()
                         .map(c -> CountryMapper.toDto(c, lang))
-                        .toList()
+                        .toList(),
+                SourceMapper.toDto(movie.getRatings()),
+                SourceMapper.toDto(movie.getVotes()),
+                SourceMapper.toDto(movie.getExternalIds())
         );
     }
 }

@@ -62,6 +62,15 @@ public class Movie {
     )
     private Set<ProductionCountry> productionCountries = new HashSet<>();
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MovieRating> ratings = new HashSet<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MovieVotes> votes = new HashSet<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MovieExternalId> externalIds = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
