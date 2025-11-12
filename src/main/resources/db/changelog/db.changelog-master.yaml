@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changeset-005-add-country-schema.sql
   - include:
       file: db/changelog/changeset-006-add-source-schema.sql
+  - include:
+      file: db/changelog/changeset-007-add-image-schema.sql

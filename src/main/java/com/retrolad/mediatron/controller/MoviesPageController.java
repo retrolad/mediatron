@@ -1,5 +1,6 @@
 package com.retrolad.mediatron.controller;
 
+import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class MoviesPageController {
 
     @GetMapping("/movies-list")
     public String getMoviesByYearPage(@RequestParam(name = "year") Integer year, Model model) {
-        model.addAttribute("movies", movieService.getByYear(year));
+        model.addAttribute("movies", movieService.getByYear(year, ImageSize.FULL));
         model.addAttribute("year", year);
         return "movies";
     }

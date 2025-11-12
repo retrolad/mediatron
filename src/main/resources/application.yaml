@@ -12,3 +12,12 @@ spring:
     show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+app:
+  images:
+    base-dir: images
+    posters-dir: ${app.images.base-dir}/poster
+    backdrop-dir: ${app.images.base-dir}/backdrop
+    logos-dir: ${app.images.base-dir}/logo
+  lang:
+    default: ru

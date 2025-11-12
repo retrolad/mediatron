@@ -1,5 +1,6 @@
 package com.retrolad.mediatron.controller;
 
+import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,11 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<?> getMovies(@RequestParam Integer year) {
-        return ResponseEntity.ok(movieService.getByYear(year));
+        return ResponseEntity.ok(movieService.getByYear(year, ImageSize.FULL));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam String lang) {
-        return ResponseEntity.ok(movieService.getById(id, lang));
+        return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));
     }
 }

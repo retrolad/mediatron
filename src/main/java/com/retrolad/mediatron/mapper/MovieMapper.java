@@ -1,11 +1,18 @@
 package com.retrolad.mediatron.mapper;
 
+import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.dto.MovieDto;
 import com.retrolad.mediatron.model.Movie;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class MovieMapper {
 
-    public static MovieDto toDto(Movie movie, String lang) {
+    private final ImageMapper imageMapper;
+
+    public MovieDto toDto(Movie movie, String lang, ImageSize posterSize) {
         return new MovieDto(
                 movie.getId(),
                 movie.getOriginalTitle(),
@@ -24,7 +31,8 @@ public class MovieMapper {
                         .toList(),
                 SourceMapper.toDto(movie.getRatings()),
                 SourceMapper.toDto(movie.getVotes()),
-                SourceMapper.toDto(movie.getExternalIds())
+                SourceMapper.toDto(movie.getExternalIds()),
+                imageMapper.toDto(movie.getImages(), lang, posterSize)
         );
     }
 }
