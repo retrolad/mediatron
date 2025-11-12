@@ -3,6 +3,7 @@ let sections = [];
 let years = [];
 let index = 0;
 let isScrolling = false;
+let isPointerOver = false; // <-- флаг наведения курсора
 
 function updateLists() {
     sections = Array.from(document.querySelectorAll('.year-section'));
@@ -10,7 +11,11 @@ function updateLists() {
     // повесить клики, если нужно
     years.forEach((y, idx) => {
         y.removeEventListener('click', y._clickHandler);
-        y._clickHandler = () => showSection(idx, true);
+        // при клике переводим фокус на карусель и показываем секцию
+        y._clickHandler = () => {
+            if (carousel && typeof carousel.focus === 'function') carousel.focus();
+            showSection(idx, true);
+        };
         y.addEventListener('click', y._clickHandler);
     });
 }
@@ -69,29 +74,66 @@ document.addEventListener("htmx:load", () => {
     showSection(index);
 });
 
-// колесо
-window.addEventListener('wheel', (e) => {
-    if (isScrolling) return;
-    if (e.deltaY > 0) showSection(index + 1);
-    else if (e.deltaY < 0) showSection(index - 1);
-});
+// отслеживаем наведение на карусель (pointer — покрывает мышь и некоторые тач-поведения)
+if (carousel) {
+    carousel.addEventListener('pointerenter', () => {
+        isPointerOver = true;
+    });
+    carousel.addEventListener('pointerleave', () => {
+        isPointerOver = false;
+    });
+}
 
-// клавиши
-window.addEventListener('keydown', (e) => {
-    if (isScrolling) return;
-    if (e.key === 'ArrowDown') showSection(index + 1);
-    if (e.key === 'ArrowUp') showSection(index - 1);
-});
+// колесо — слушаем на элементе карусели, применяем когда карусель в фокусе или над ней курсор
+if (carousel) {
+    // Важно: passive=false, чтобы e.preventDefault() сработал при необходимости
+    carousel.addEventListener('wheel', (e) => {
+         // прокрутка работает только когда карусель в фокусе или над ней курсор
+         if (isScrolling) return;
+         if (document.activeElement !== carousel && !isPointerOver) return;
 
-// свайпы
+         // Предотвращаем прокрутку страницы ТОЛЬКО если карусель в фокусе.
+         // Если пользователь просто наводит мышь, разрешаем странице скроллиться,
+         // но при этом показываем смену секции карусели (без блокировки страницы).
+         if (document.activeElement === carousel) {
+             e.preventDefault();
+         }
+
+         if (e.deltaY > 0) showSection(index + 1);
+         else if (e.deltaY < 0) showSection(index - 1);
+    }, false);
+}
+
+// клавиши — обрабатываем только когда карусель в фокусе (keydown на элементе)
+if (carousel) {
+    carousel.addEventListener('keydown', (e) => {
+        if (isScrolling) return;
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            showSection(index + 1);
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            showSection(index - 1);
+        }
+    });
+}
+
+// свайпы — слушаем на карусели; работаем при фокусе или наведении
 let startY = 0;
-window.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
-window.addEventListener('touchend', (e) => {
-    const diff = e.changedTouches[0].clientY - startY;
-    if (Math.abs(diff) < 50) return;
-    if (diff < 0) showSection(index + 1);
-    else showSection(index - 1);
-});
+if (carousel) {
+    carousel.addEventListener('touchstart', (e) => {
+        if (document.activeElement !== carousel && !isPointerOver) return;
+        startY = e.touches[0].clientY;
+    });
+    carousel.addEventListener('touchend', (e) => {
+        if (document.activeElement !== carousel && !isPointerOver) return;
+        const diff = e.changedTouches[0].clientY - startY;
+        if (Math.abs(diff) < 50) return;
+        if (diff < 0) showSection(index + 1);
+        else showSection(index - 1);
+    });
+}
 
 // ресайз — центрируем текущую секцию
 window.addEventListener('resize', () => {

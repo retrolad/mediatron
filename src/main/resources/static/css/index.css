@@ -6,7 +6,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    overflow: auto; /* позволяем странице прокручиваться */
     color: white;
     font-family: system-ui, sans-serif;
     background: #111827;
@@ -20,6 +20,11 @@ html, body {
     height: 100%;
     transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     will-change: transform;
+}
+
+#carousel:focus {
+    outline: none;
+    border: none;
 }
 
 .year-section {
@@ -94,6 +99,41 @@ html, body {
 
 /*** СПИСОК ФИЛЬМОВ ***/
 
+/* Плавная прокрутка для правой колонки с фильмами */
+#movies-list {
+    /* ручная плавная прокрутка через JS — отключаем нативный smooth */
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Стили полосы прокрутки — WebKit (Chrome, Edge, Safari) */
+#movies-list::-webkit-scrollbar {
+    width: 10px;
+}
+#movies-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#movies-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.06); /* тёмный полупрозрачный */
+    border-radius: 8px;
+    border: 2px solid transparent; /* чтобы создать отступ */
+    background-clip: padding-box;
+}
+#movies-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255,255,255,0.10);
+}
+
+/* Firefox */
+#movies-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.06) transparent;
+}
+
+/* Альтернативные мелкие улучшения для UX */
+#movies-list:focus {
+    outline: none;
+}
+
 /* Плавное появление/исчезновение содержимого в #movies-list */
 .fade-target {
     transition: opacity 250ms ease-in;
@@ -101,3 +141,97 @@ html, body {
 }
 .fade-out { opacity: 0; }
 .fade-in  { opacity: 1; }
+
+/* Стили карточек фильмов */
+.movie-card {
+    border: 1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 4px 10px rgba(2,6,23,0.6);
+    position: relative; /* чтобы backdrop был внутри карточки */
+    overflow: hidden;   /* скрыть нижнюю половину backdrop'а */
+}
+
+/* backdrop: верхняя половина карточки с затемненным задником */
+.movie-card .backdrop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 50%; /* верхняя половина карточки */
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.25);
+    z-index: 0;
+    /* только верхние углы скруглены, чтобы совпадать с карточкой */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* содержимое карточки поверх backdrop'а */
+.movie-card .poster,
+.movie-card .content {
+    position: relative;
+    z-index: 1;
+}
+
+/* небольшая тёмная градиентная подложка над backdrop для читаемости текста (опционально) */
+.movie-card::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.45));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ограничение текста описания: 5 строки с многоточием */
+.description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+}
+
+.movie-card .original-title {
+    font-style: italic;
+    color: #cbd5e1; /* neutral-300 */
+}
+
+.movie-card .russian-title {
+    color: #fff;
+    line-height: 1;
+}
+
+.rating-badge {
+    min-width: 56px;
+    justify-content: center;
+    font-family: "JetBrains Mono";
+}
+
+/* метки рейтингов: KP и IMDb — простая цветовая дифференциация */
+.rating-badge .kp {
+    color: #4ef383;
+}    /* amber */
+.rating-badge .imdb { color: #24fbf4; }  /* yellow */
+
+/* жанры */
+.genres span {
+    display: inline-block;
+    padding: 0.18rem 0.45rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 9999px;
+    margin-right: 0.35rem;
+    color: #9ca3af; /* neutral-400 */
+    font-size: 0.78rem;
+}
+
+/* предотвращаем разрастание текста в карточке */
+.movie-card .titles { min-width: 0; }
+
+/* адаптив: на маленьких ширинах — одна колонка */
+@media (max-width: 768px) {
+    .grid.grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+    .poster img { width: 96px; height: 144px; }
+}

@@ -10,10 +10,11 @@
 </head>
 <body class="bg-gray-900">
 
-<div class="grid grid-cols-12 h-screen">
+<div class="grid grid-cols-12 min-h-screen">
     <!-- Левая колонка: карусель -->
-    <div class="col-span-4 relative border-r border-neutral-800 flex items-center justify-center">
-        <div id="carousel" class="fade-in">
+    <!-- Левая колонка фиксирована по высоте, не влияет на высоту страницы -->
+    <div class="col-span-4 relative border-r border-neutral-800 flex items-center justify-center sticky top-0 h-screen overflow-hidden">
+        <div id="carousel" class="fade-in" tabindex="0" role="listbox" aria-label="Годы">
             <div th:each="y, iter : ${years}"
                  th:data-year="${y}"
                  class="year-section">
@@ -28,7 +29,8 @@
         </div>
         <div class="hint">Колесо мыши ↑↓ или стрелки ↑↓</div>
     </div>
-    <div id="movies-list" class="col-span-8 p-8 overflow-y-auto fade-target">
+    <!-- Правая колонка: скролл только для списка фильмов -->
+    <div id="movies-list" class="col-span-8 p-8 fade-target overflow-y-auto max-h-screen">
         <div class="text-neutral-400 text-center">
             Выберите год, чтобы увидеть фильмы
         </div>

@@ -5,22 +5,59 @@
         Нет фильмов за этот год.
     </div>
 
-    <div th:each="m : ${movies}" class="p-4 rounded-2xl bg-neutral-900 hover:bg-neutral-800 transition">
-        <span class="text-xl font-medium" th:text="${m.title}"></span>
-        <span class="ml-2 text-neutral-400 italic" th:text="${m.originalTitle}"></span>
-        <div class="flex gap-4 mt-2 text-sm text-neutral-500">
-            <div class="text-sm text-neutral-400" >
-                <span class="mr-2" th:each="g : ${m.genres()}" th:text="${g}"></span>
-            </div>
-            <div class="text-sm text-neutral-400" >
-                <span th:if="${m.ratingMpaa() != null}" th:text="${m.ratingMpaa().toUpperCase()}"></span>
-                <span th:if="${m.ageRating() != null}" th:text="${m.ageRating()} + '+'"></span>
-                <span th:text="${m.runtime()} + ' min'"></span>
-            </div>
+    <!-- сетка 2 колонки -->
+    <div class="grid grid-cols-2 gap-6">
+        <div th:each="m : ${movies}">
+            <!-- карточка фильма -->
+            <article class="movie-card flex gap-4 p-4 rounded-2xl bg-neutral-900 hover:bg-neutral-800 transition">
+                <!-- backdrop для верхней половины карточки -->
+                <div class="backdrop" th:if="${m.images.backdropPath() != null}"
+                     th:style="'background-image: url(\'/' + ${m.images.backdropPath()} + '\')'"></div>
+
+                <!-- постер -->
+                <div class="poster flex-shrink-0">
+                    <img th:src="@{'/' + ${m.images.posterPath()}}"
+                         alt="Poster"
+                         class="w-32 h-48 object-cover rounded-lg shadow-lg"
+                         onerror="this.style.opacity=0.6; this.src='/img/poster-placeholder.png'"/>
+                </div>
+
+                <!-- контент карточки -->
+                <div class="flex-1 min-w-0 content">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="titles">
+                            <!-- оригинальное название (выделено) -->
+                            <div class="original-title text-sm text-neutral-300 italic truncate" th:text="${m.originalTitle}">Original Title</div>
+                            <!-- русское название -->
+                            <div class="russian-title text-lg font-semibold truncate" th:text="${m.title}">Русское название</div>
+                        </div>
+
+                        <!-- оценки -->
+                        <div class="ratings flex flex-col items-end gap-1 text-sm">
+                            <div class="rating-badge bg-neutral-800 text-neutral-200 px-2 py-1 rounded-md text-xs flex items-center gap-2">
+                                <span class="kp text-amber-400 font-semibold" th:text="${m.ratings().get('kp')}">KP</span>
+                                <span class="imdb text-yellow-400 font-semibold" th:text="${m.ratings().get('imdb')}">IMDb</span>
+                            </div>
+
+                            <!-- возрастной и длительность -->
+                            <div class="meta text-xs text-neutral-400">
+                                <span th:if="${m.ageRating() != null}" th:text="${m.ageRating()} + '+'"></span>
+                                <span th:if="${m.ageRating() != null && m.runtime() != null}"> · </span>
+                                <span th:if="${m.runtime() != null}" th:text="${m.runtime()} + ' мин'"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- жанры -->
+                    <div class="genres mt-3 text-sm text-neutral-400">
+                        <span th:each="g : ${m.genres()}" th:text="${g}" class="mr-2"></span>
+                    </div>
+
+                    <!-- краткое описание -->
+                    <div class="mt-6 text-xs text-neutral-500 description" th:if="${m.description() != null}" th:text="${m.description()}"></div>
+                </div>
+            </article>
         </div>
-        <img th:src="@{'/' + ${m.images.posterPath()}}"
-             alt="Poster"
-             class="w-20 h-auto rounded-xl shadow-lg">
     </div>
 </div>
 <script type="text/javascript" th:src="@{/js/movies-list.js}"></script>
