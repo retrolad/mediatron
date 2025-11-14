@@ -32,6 +32,7 @@ public class ImageUrlBuilder {
 
                 url = baseDir + "/poster/" + lang + size;
             }
+            case "logo" -> url = baseDir + "/logo/" + lang;
         }
 
         url += "/" + image.getUrl() + ".jpg";

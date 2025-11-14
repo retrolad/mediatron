@@ -1,15 +1,30 @@
 :root {
     --section-height: 20vh;
+    --movie-hero-h: 100vh;    /* {changed} фон на всю высоту первого экрана */
+    --poster-height: 330px;  /* базовая высота постера */
+}
+
+/* Используем динамические единицы высоты экрана, когда доступны (мобилки) */
+@supports (height: 1dvh) {
+    :root { --movie-hero-h: 100dvh; } /* {changed} */
+}
+@supports (height: 1svh) {
+    :root { --movie-hero-h: 100svh; } /* {changed} */
 }
 
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    overflow: auto; /* позволяем странице прокручиваться */
+    min-height: 100%; /* было height: 100% */
+    /* убран overflow: auto; чтобы документ мог расти и нормально скроллиться */
     color: white;
     font-family: system-ui, sans-serif;
     background: #111827;
+}
+
+/* отступ под фиксированный фон — оставляем */
+body {
+    padding-top: var(--movie-hero-h);
 }
 
 /*** КАРУСЕЛЬ  ***/
@@ -228,10 +243,119 @@ html, body {
 /* предотвращаем разрастание текста в карточке */
 .movie-card .titles { min-width: 0; }
 
-/* адаптив: на маленьких ширинах — одна колонка */
-@media (max-width: 768px) {
-    .grid.grid-cols-2 {
-        grid-template-columns: 1fr;
+/* --- Movie page backdrop / overlay --- */
+
+/* фиксированный фон — занимает верхнюю часть экрана и остаётся на месте при скролле */
+.movie-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--movie-hero-h);
+    background-size: cover;
+    background-position: top center;  /* {changed} якорим по верху, без «пустоты» */
+    background-repeat: no-repeat;
+    z-index: 0;
+    transform: translateZ(0);
+    will-change: transform;
+    filter: blur(0px) saturate(66%);
+}
+
+/* Новый overlay: низ задника размывается и плавно переходит в тёмную часть */
+.movie-backdrop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* увеличиваем на пару пикселей, чтобы перекрыть низ задника без зазора на мобильных */
+    height: calc(var(--movie-hero-h) + 36px);
+    z-index: 1;
+    pointer-events: none;
+
+    /* опустили точки градиента */
+    background: linear-gradient(to bottom, #0f172a00 0%, #0f172a 92%, #0f172a 100%);
+}
+
+/* Размытие применяем маской — сильнее внизу, прозрачно сверху */
+.movie-backdrop-overlay::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    height: calc(var(--movie-hero-h) + 12px);
+    backdrop-filter: blur(14px) saturate(115%);
+    -webkit-backdrop-filter: blur(14px) saturate(115%);
+    mask-image: linear-gradient(to bottom,
+    rgba(23,23,23,0) 0%,
+    rgba(23,23,23,0.45) 75%,
+    rgba(23,23,23,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom,
+    rgba(23,23,23,0) 0%,
+    rgba(23,23,23,0.45) 75%,
+    rgba(23,23,23,1) 100%);
+}
+
+/* Мелкая адаптация для очень узких экранов — сохраняем тот же визуальный переход */
+@media (max-width: 640px) {
+    /* Дополнительно дублируем поведение на мобилках (на случай специфики браузеров) */
+    .movie-backdrop { background-position: top center; } /* { changed code } */
+    .movie-backdrop-overlay {
+        background: linear-gradient(
+            to bottom,
+            rgba(23,23,23,0) 0%,
+            rgba(23,23,23,0.45) 75%,
+            rgba(23,23,23,1) 100%
+        );
     }
-    .poster img { width: 96px; height: 144px; }
+    .movie-backdrop-overlay::before {
+        mask-image: linear-gradient(to bottom,
+        rgba(23,23,23,0) 0%,
+        rgba(23,23,23,0.45) 75%,
+        rgba(23,23,23,1) 100%);
+        -webkit-mask-image: linear-gradient(to bottom,
+        rgba(23,23,23,0) 0%,
+        rgba(23,23,23,0.45) 75%,
+        rgba(23,23,23,1) 100%);
+    }
+}
+
+/* Fallback без поддержки backdrop-filter — оставим только затемнение градиентом */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .movie-backdrop-overlay::before {
+        display: none;
+    }
+}
+
+/* === Overlay контент поверх задника (переписан на Tailwind: старые правила удалены) === */
+/* Было:
+.movie-hero-content { ... }
+.hero-poster { ... }
+.hero-title { ... }
+.hero-title-main { ... }
+.hero-title-original { ... }
+@media (...) { ... }
+*/
+
+/* Оставляем только тени для текста (используются вместе с Tailwind классами) */
+.hero-title-main {
+    text-shadow: 0 6px 22px rgba(0,0,0,0.55);
+    font-family: 'Marck Script', Jura, sans-serif;
+}
+.hero-title-original {
+    text-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+
+/* Новый: оверлей с логотипом/названием не должен перехватывать скролл/тач */
+.movie-hero-overlay {
+    pointer-events: none;
+}
+
+/* === Контент страницы фильма под фоном === */
+.movie-body {
+    position: relative;
+    z-index: 2;
+    /* Убрано: предотвращение схлопывания через border и сдвиг через margin-top — больше не нужно */
+    /* border-top: 1px solid transparent; */
+    /* margin-top: calc(var(--movie-hero-h) - 1px); */
+    background-color: #0f172a;
+    padding: 2rem 0 4rem;
 }

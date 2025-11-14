@@ -21,7 +21,7 @@
                 <div class="year font-mono"
                      th:text="${y}"
                      hx-get="/movies-list"
-                     th:attr="hx-get=@{/movies-list(year=${y})}"
+                     th:attr="hx-get=@{/movies-list(year=${y}, lang=${lang})}"
                      hx-target="#movies-list"
                      hx-swap="innerHTML">
                 </div>

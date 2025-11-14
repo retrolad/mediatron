@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title th:text="${movie.title} ?: 'Фильм'">Фильм</title>
+
+    <!-- Tailwind и основной CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+</head>
+<body class="bg-neutral-900 text-white antialiased">
+
+    <!-- Фоновое изображение (фиксированное) -->
+    <div th:with="backdrop=${movie.images != null && movie.images.backdropPath() != null ? movie.images.backdropPath() : movie.backdropPath() }">
+        <div th:if="${backdrop != null}"
+             class="movie-backdrop"
+             th:style="'background-image: url(\'/' + ${backdrop} + '\')'">
+        </div>
+
+        <div class="movie-backdrop-overlay" aria-hidden="true"></div>
+    </div>
+
+    <!-- Overlay с логотипом/названием: теперь absolute, чтобы «уезжало» вверх при скролле -->
+    <div class="absolute top-0 left-0 h-[var(--movie-hero-h)] w-full z-20 movie-hero-overlay">
+        <div class="h-full w-full mx-auto max-w-5xl flex items-center justify-center px-6">
+            <div class="w-[50vw] max-w-[700px] min-w-[200px] flex items-center justify-center">
+                <img th:if="${movie.images != null && !movie.images.logoPath().isEmpty()}"
+                     th:src="@{'/' + ${movie.images.logoPath()}}"
+                     alt="Logo"
+                     class="w-full h-auto object-contain drop-shadow-[0_6px_22px_rgba(0,0,0,0.55)]" />
+
+                <h1 th:if="${movie.images == null || movie.images.logoPath().isEmpty()}"
+                    th:text="${movie.title}"
+                    class="hero-title-main text-center w-full font-extrabold"
+                    style="font-size: clamp(2.5rem, 8vw, 5.5rem); line-height: 1; margin: 0;">
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!-- /hero-контент -->
+
+    <!-- Контент: вся остальная информация — ниже, изначально невидима без прокрутки -->
+    <main class="movie-body">
+        <div th:with="poster=${movie.images != null && movie.images.posterPath() != null ? movie.images.posterPath() : movie.posterPath()}"
+             class="mx-auto w-[90%] md:w-[80%] lg:w-[70%] max-w-6xl">
+
+            <div class="flex flex-col md:flex-row gap-6 md:gap-10">
+                <!-- Постер слева -->
+                <div class="shrink-0 mx-auto md:mx-0">
+                    <img th:if="${poster != null}"
+                         th:src="@{'/' + ${poster}}"
+                         alt="Постер"
+                         class="w-48 md:w-56 lg:w-64 rounded-xl shadow-2xl shadow-black/60 object-cover" />
+                </div>
+
+                <!-- Информация справа -->
+                <div class="flex-1">
+                    <!-- Название и год -->
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">
+                        <span th:text="${movie.title}">Название фильма</span>
+                        <span th:if="${movie.year != null}" class="text-gray-300 font-semibold">
+                            (<span th:text="${movie.year}">2024</span>)
+                        </span>
+                    </h1>
+
+                    <!-- Жанры, продолжительность, возрастной рейтинг -->
+                    <div class="flex flex-wrap items-center gap-2 mb-5">
+                        <!-- Жанры как pill -->
+                        <span th:each="g : ${movie.genres}"
+                              th:text="${g}"
+                              class="px-2.5 py-1 rounded-full bg-white/10 text-gray-200 text-sm">
+                        </span>
+
+                        <!-- Разделитель (если есть жанры и есть другие меты) -->
+                        <span th:if="${(movie.genres != null and !#lists.isEmpty(movie.genres)) and (movie.runtime != null or movie.ageRating != null)}"
+                              class="text-white/30 mx-1 select-none">•</span>
+
+                        <!-- Продолжительность -->
+                        <span th:if="${movie.runtime != null}"
+                              th:text="${movie.runtime + ' мин'}"
+                              class="px-2.5 py-1 rounded-full bg-white/10 text-gray-200 text-sm">
+                        </span>
+
+                        <!-- Возрастной рейтинг (пытаемся найти одно из полей) -->
+                        <span th:if="${movie.ageRating != null}"
+                              th:text="${movie.ageRating}"
+                              class="px-2.5 py-1 rounded-full border border-white/15 text-gray-200 text-sm">
+                        </span>
+<!--                        <span th:if="${movie.ageRating == null and movie.certification != null}"-->
+<!--                              th:text="${movie.certification}"-->
+<!--                              class="px-2.5 py-1 rounded-full border border-white/15 text-gray-200 text-sm">-->
+<!--                        </span>-->
+                    </div>
+
+                    <!-- Описание -->
+                    <p class="text-gray-300/95 leading-relaxed text-base md:text-lg">
+                        <span th:text="${movie.description != null ? movie.description : movie.overview}">Описание фильма...</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Место под людей/доп.информацию на будущее -->
+            <section class="mt-10 border-t border-white/10 pt-8">
+                <!-- заглушка, позже заполните кастомным контентом -->
+            </section>
+        </div>
+    </main>
+
+</body>
+</html>

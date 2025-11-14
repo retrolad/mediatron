@@ -19,20 +19,22 @@ public class MovieService {
     private final MovieMapper movieMapper;
 
     @Value("${app.lang.default}")
-    private String DEFAULT_LANG = "ru";
+    private String DEFAULT_LANG;
 
     public List<Integer> getAllYears() {
         return movieRepository.findAllYears();
     }
 
-    public List<MovieDto> getByYear(Integer year, ImageSize size) {
-        return movieRepository.findByYearWithTranslation(year, DEFAULT_LANG).stream()
-                .map(m -> movieMapper.toDto(m, DEFAULT_LANG, size))
+    public List<MovieDto> getByYear(Integer year, ImageSize size, String lang) {
+        String l = lang.isBlank() ? DEFAULT_LANG : lang;
+        return movieRepository.findByYearWithTranslation(year, l).stream()
+                .map(m -> movieMapper.toDto(m, l, size))
                 .toList();
     }
 
     public MovieDto getById(Long id, String lang, ImageSize size) {
-        return movieRepository.findByIdWithTranslation(id, lang)
-                .map(m -> movieMapper.toDto(m, lang, size)).orElseThrow();
+        String l = lang.isBlank() ? DEFAULT_LANG : lang;
+        return movieRepository.findByIdWithTranslation(id, l)
+                .map(m -> movieMapper.toDto(m, l, size)).orElseThrow();
     }
 }

@@ -13,11 +13,6 @@ public class MovieController {
 
     private MovieService movieService;
 
-    @GetMapping
-    public ResponseEntity<?> getMovies(@RequestParam Integer year) {
-        return ResponseEntity.ok(movieService.getByYear(year, ImageSize.FULL));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam String lang) {
         return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));

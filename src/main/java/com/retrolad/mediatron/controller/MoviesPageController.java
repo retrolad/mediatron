@@ -6,8 +6,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Comparator;
 
 @Controller
 @RequestMapping
@@ -17,16 +20,24 @@ public class MoviesPageController {
     private MovieService movieService;
 
     @GetMapping("/")
-    public String getMoviesPage(Model model) {
+    public String getMoviesPage(Model model, @RequestParam(required = false) String lang) {
         model.addAttribute("years", movieService.getAllYears()
-                .stream().sorted());
+                .stream().sorted(Comparator.reverseOrder()));
+        model.addAttribute("lang", lang);
         return "index";
     }
 
     @GetMapping("/movies-list")
-    public String getMoviesByYearPage(@RequestParam(name = "year") Integer year, Model model) {
-        model.addAttribute("movies", movieService.getByYear(year, ImageSize.FULL));
+    public String getMoviesByYearPage(@RequestParam(name = "year") Integer year, @RequestParam(required = false) String lang, Model model) {
+        model.addAttribute("movies", movieService.getByYear(year, ImageSize.FULL, lang));
         model.addAttribute("year", year);
+        model.addAttribute("lang", lang);
         return "movies";
+    }
+
+    @GetMapping("/movie/{id}")
+    public String getMovieProfilePage(@PathVariable Long id, Model model, @RequestParam(required = false) String lang) {
+        model.addAttribute("movie", movieService.getById(id, lang, ImageSize.FULL));
+        return "movie-page";
     }
 }

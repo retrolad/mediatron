@@ -6,7 +6,6 @@ import com.retrolad.mediatron.dto.ImageType;
 import com.retrolad.mediatron.model.MovieImage;
 import com.retrolad.mediatron.service.ImageUrlBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -20,6 +19,7 @@ public class ImageMapper {
     public ImageDto toDto(Set<MovieImage> images, String lang, ImageSize posterSize) {
         String backdropPath = "";
         String posterPath = "";
+        String logoPath = "";
 
         for (var image : images) {
             ImageType type = ImageType.valueOf(image.getType().getName().toUpperCase());
@@ -32,9 +32,13 @@ public class ImageMapper {
                     posterPath = url;
                 }
                 case BACKDROP -> backdropPath = url;
+                case LOGO -> {
+                    if (!image.getLangCode().equals(lang)) continue;
+                    logoPath = url;
+                }
             }
         }
 
-        return new ImageDto(backdropPath, posterPath);
+        return new ImageDto(backdropPath, posterPath, logoPath);
     }
 }
