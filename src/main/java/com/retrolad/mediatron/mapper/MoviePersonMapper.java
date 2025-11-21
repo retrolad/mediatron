@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 public class MoviePersonMapper {
 
     private final PersonMapper personMapper;
+    private final RoleMapper roleMapper;
 
     public MoviePersonDto toDto(MoviePerson moviePerson, String lang) {
         return new MoviePersonDto(
                 moviePerson.getPersonId(),
                 personMapper.toDto(moviePerson.getPerson(), lang).name(),
                 moviePerson.getCharacterName(),
-                moviePerson.getRole().getTranslations().get(lang).getDisplayName(),
+                roleMapper.toDto(moviePerson.getRole(), lang),
                 moviePerson.getBillingOrder()
         );
     }
