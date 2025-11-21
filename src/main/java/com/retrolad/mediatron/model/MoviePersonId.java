@@ -12,11 +12,14 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieTranslationId implements Serializable {
+public class MoviePersonId implements Serializable {
 
     @Column(name = "movie_id")
-    private int movieId;
+    private Long movieId;
 
-    @Column(name = "lang_code", length = 2)
-    private String langCode;
+    @Column(name = "person_id")
+    private Long personId;
+
+    @Column(name = "role_id")
+    private Integer roleId;
 }

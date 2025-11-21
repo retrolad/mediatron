@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,10 +13,10 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieTranslationId implements Serializable {
+public class RoleTranslationId implements Serializable {
 
-    @Column(name = "movie_id")
-    private int movieId;
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @Column(name = "lang_code", length = 2)
     private String langCode;

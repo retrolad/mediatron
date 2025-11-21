@@ -13,3 +13,7 @@ databaseChangeLog:
       file: db/changelog/changeset-006-add-source-schema.sql
   - include:
       file: db/changelog/changeset-007-add-image-schema.sql
+  - include:
+      file: db/changelog/changeset-008-add-role-schema.sql
+  - include:
+      file: db/changelog/changeset-009-add-person-schema.sql

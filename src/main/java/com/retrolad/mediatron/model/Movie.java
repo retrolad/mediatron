@@ -74,6 +74,9 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MovieImage> images = new HashSet<>();
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MoviePerson> persons = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

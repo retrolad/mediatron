@@ -14,7 +14,7 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam String lang) {
+    public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam(required = false) String lang) {
         return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));
     }
 }

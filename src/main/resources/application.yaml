@@ -19,5 +19,6 @@ app:
     posters-dir: ${app.images.base-dir}/poster
     backdrop-dir: ${app.images.base-dir}/backdrop
     logos-dir: ${app.images.base-dir}/logo
+    tmdb-images-url: https://image.tmdb.org/t/p/original
   lang:
     default: ru

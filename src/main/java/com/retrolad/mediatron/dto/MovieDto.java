@@ -6,5 +6,5 @@ import java.util.Map;
 public record MovieDto(Long id, String originalTitle, int year, int runtime, String title, String description,
                        String tagline, String ratingMpaa, Short ageRating, List<String> genres, List<String> countries,
                        Map<String, Float> ratings, Map<String, Integer> votes, Map<String, String> externalIds,
-                       ImageDto images) {
+                       ImageDto images, List<MoviePersonDto> persons) {
 }
