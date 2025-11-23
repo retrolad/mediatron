@@ -229,6 +229,21 @@ body {
 }    /* amber */
 .rating-badge .imdb { color: #24fbf4; }  /* yellow */
 
+/* иконки источников рейтингов */
+.rating-source-icon {
+    width: 72px;      /* {changed} больше ширина для читаемости логотипов */
+    height: auto;     /* {changed} естественная пропорция */
+    opacity: .9;
+    transition: opacity .25s ease, transform .25s ease;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.55));
+}
+.rating-source-icon:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+.kp-icon { color: #ff7a00; }       /* фирменный оранжевый оттенок */
+.imdb-icon { color: #f5c518; }     /* классический IMDb жёлтый */
+
 /* жанры */
 .genres span {
     display: inline-block;
@@ -253,12 +268,16 @@ body {
     width: 100%;
     height: var(--movie-hero-h);
     background-size: cover;
-    background-position: top center;  /* {changed} якорим по верху, без «пустоты» */
+    background-position: center;  /* {changed} якорим по верху, без «пустоты» */
     background-repeat: no-repeat;
     z-index: 0;
     transform: translateZ(0);
-    will-change: transform;
-    filter: blur(0px) saturate(66%);
+    will-change: transform, filter; /* добавлено transform сюда для оптимизации */
+    /* Плавность трансформаций для параллакса */
+    transition: transform 200ms cubic-bezier(0.2,0.8,0.2,1);
+    transform-origin: center center;
+    filter: blur(0px) saturate(70%);
+    opacity: 0.8;
 }
 
 /* Новый overlay: низ задника размывается и плавно переходит в тёмную часть */
@@ -273,7 +292,7 @@ body {
     pointer-events: none;
 
     /* опустили точки градиента */
-    background: linear-gradient(to bottom, #0f172a00 0%, #0f172a 92%, #0f172a 100%);
+    /*background: linear-gradient(to bottom, #0f172a00 0%, #0f172a 92%, #0f172a 100%);*/
 }
 
 /* Размытие применяем маской — сильнее внизу, прозрачно сверху */
@@ -292,6 +311,52 @@ body {
     rgba(23,23,23,0) 0%,
     rgba(23,23,23,0.45) 75%,
     rgba(23,23,23,1) 100%);
+}
+
+.movie-logo {
+    /*background: #7fffd71a;*/
+    /*border-radius: 50px;*/
+    padding: 4rem;
+    /*backdrop-filter: blur(5px);*/
+}
+
+.movie-landing-actor-list {
+    font-family: Verdana, serif;
+}
+
+/* Стиль больших имён актёров */
+.actor-name {
+    font-family: 'Jura','Roboto Mono',system-ui,sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    color: #fff;
+    text-shadow: 0 3px 14px rgba(0,0,0,0.7), 0 0 2px rgba(0,0,0,0.55);
+}
+
+.movie-rating {
+    font-family: 'Jura','Roboto Mono',system-ui,sans-serif;
+}
+
+/* Слоган под логотипом — особый шрифт и аккуратная типографика */
+.movie-tagline {
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(255,255,255,0.92);
+    /* адаптивный размер: от 1rem до 1.6rem */
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    line-height: 1.15;
+    letter-spacing: 0.2px;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Специальный тон для слогана, когда он размещён сверху */
+.movie-hero-overlay .movie-tagline {
+    margin-top: 0;           /* на всякий случай убрать дополнительный отступ */
+    opacity: 0.98;
+    max-width: 60ch;
 }
 
 /* Мелкая адаптация для очень узких экранов — сохраняем тот же визуальный переход */
@@ -338,7 +403,7 @@ body {
 /* Оставляем только тени для текста (используются вместе с Tailwind классами) */
 .hero-title-main {
     text-shadow: 0 6px 22px rgba(0,0,0,0.55);
-    font-family: 'Marck Script', Jura, sans-serif;
+    font-family: 'Roboto', Jura, sans-serif;
 }
 .hero-title-original {
     text-shadow: 0 4px 14px rgba(0,0,0,0.45);
@@ -356,6 +421,163 @@ body {
     /* Убрано: предотвращение схлопывания через border и сдвиг через margin-top — больше не нужно */
     /* border-top: 1px solid transparent; */
     /* margin-top: calc(var(--movie-hero-h) - 1px); */
-    background-color: #0f172a;
-    padding: 2rem 0 4rem;
+    /*background-color: #0f172a;*/
+    padding: 5rem 0 4rem;
+    border-top: #7fffe8 1px solid;
+    backdrop-filter: blur(35px) saturate(0.5) brightness(0.92);
+}
+
+/* Панель для списка актёров: читаемо на любом фоне */
+.actor-panel {
+    background: linear-gradient(145deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.40) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06);
+    overflow-y: auto;
+}
+
+/* Горизонтальная лента актёров */
+.actor-strip {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+    scroll-snap-type: x mandatory;
+    mask-image: linear-gradient(to right, transparent, rgb(0 0 0 / 85%) 0%, rgb(0 0 0 / 85%) 99%, transparent);
+}
+.actor-strip::-webkit-scrollbar {
+    height: 8px;
+}
+.actor-strip::-webkit-scrollbar-track {
+    background: transparent;
+}
+.actor-strip::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+}
+.actor-item {
+    flex: 0 0 auto;
+    width: 120px;
+    scroll-snap-align: start;
+    text-align: center;
+}
+@media (min-width: 640px) {
+    .actor-item { width: 130px; }
+}
+.actor-photo {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 0.9rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+    background: #0f172a;
+}
+.actor-photo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg,#1e293b,#0f172a);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+}
+.actor-character {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-top: 0.25rem;
+}
+
+/* Сетка кредитов (режиссёр, сценарий, оператор, композитор, бюджет) */
+.credit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    gap: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    padding: 1.1rem 1.25rem 0.9rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.credit-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+}
+.credit-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+}
+.credit-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Адаптив */
+@media (min-width: 1024px) {
+    .credit-value { font-size: 1rem; }
+}
+@media (max-width: 480px) {
+    .credit-grid {
+        grid-template-columns: 1fr;
+        padding: 0.9rem 1rem 0.75rem;
+        border-radius: 14px;
+    }
+}
+
+/* {added} Левый столбец режиссёров (фиксированный) */
+.director-column {
+    /* убираем жёсткий фикс, даём место для центрирования блока с фото */
+    flex: 0 0 auto;
+    max-width: 220px;             /* сохраняем максимум, но не заставляем растягиваться */
+    padding-right: 0.75rem;
+    border-right: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;      /* центрируем внутренний блок */
+}
+
+/* Контейнер каждого режиссёра — фиксированная ширина (соответствует actor-item) */
+/* Фото режиссёра — те же пропорции и стили, что и у актёров, но с фиксированной шириной */
+.director-photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 0.9rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+    background: #0f172a;
+    display: block;
+}
+
+/* Фолбэк для фото режиссёра — совпадает с актёрским */
+.director-photo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg,#1e293b,#0f172a);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
 }

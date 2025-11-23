@@ -17,8 +17,9 @@ public class MoviePersonMapper {
                 moviePerson.getPersonId(),
                 personMapper.toDto(moviePerson.getPerson(), lang).name(),
                 moviePerson.getCharacterName(),
-                roleMapper.toDto(moviePerson.getRole(), lang),
-                moviePerson.getBillingOrder()
+                roleMapper.toDto(moviePerson.getRole(), "en"),
+                moviePerson.getBillingOrder(),
+                moviePerson.getPerson().getProfileImage()
         );
     }
 }

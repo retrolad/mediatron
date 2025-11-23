@@ -8,6 +8,7 @@
     <!-- Tailwind и основной CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body class="bg-neutral-900 text-white antialiased">
 
@@ -21,29 +22,85 @@
         <div class="movie-backdrop-overlay" aria-hidden="true"></div>
     </div>
 
-    <!-- Overlay с логотипом/названием: теперь absolute, чтобы «уезжало» вверх при скролле -->
+    <!-- Overlay: независимые блоки — центр (лого), слева (актеры), справа (рейтинги) -->
     <div class="absolute top-0 left-0 h-[var(--movie-hero-h)] w-full z-20 movie-hero-overlay">
-        <div class="h-full w-full mx-auto max-w-5xl flex items-center justify-center px-6">
-            <div class="w-[50vw] max-w-[700px] min-w-[200px] flex items-center justify-center">
-                <img th:if="${movie.images != null && !movie.images.logoPath().isEmpty()}"
-                     th:src="@{'/' + ${movie.images.logoPath()}}"
-                     alt="Logo"
-                     class="w-full h-auto object-contain drop-shadow-[0_6px_22px_rgba(0,0,0,0.55)]" />
+        <div class="relative h-full w-full">
 
-                <h1 th:if="${movie.images == null || movie.images.logoPath().isEmpty()}"
-                    th:text="${movie.title}"
-                    class="hero-title-main text-center w-full font-extrabold"
-                    style="font-size: clamp(2.5rem, 8vw, 5.5rem); line-height: 1; margin: 0;">
-                </h1>
+            <!-- НОВЫЙ: слоган сверху страницы (в том же overlay) -->
+            <div th:if="${movie.tagline != null and !movie.tagline.isEmpty()}"
+                 class="absolute inset-x-0 top-6 md:top-10 lg:top-12 z-30 flex justify-center pointer-events-none">
+                <p th:text="${movie.tagline}"
+                   class="movie-tagline text-center px-4">
+                </p>
             </div>
-        </div>
+
+            <!-- ЦЕНТР: лого или название (отдельный слой, не зависящий от ширины боковых колонок) -->
+            <div class="absolute inset-x-0 bottom-[14vh] md:bottom-[16vh] lg:bottom-[18vh] z-10 flex justify-center">
+                <div class="px-6 w-[45vw] md:w-[35vw] lg:w-[28vw] min-w-[200px] max-w-[700px] flex items-center justify-center flex-col">
+                    <img th:if="${movie.images != null && movie.images.logoPath() != null and !movie.images.logoPath().isEmpty()}"
+                         th:src="@{'/' + ${movie.images.logoPath()}}"
+                         alt="Logo"
+                         class="movie-logo w-full h-auto object-contain drop-shadow-[0_6px_22px_rgba(0,0,0,0.55)]"
+                         style="padding:0" />
+                    <h1 th:if="${movie.images == null || movie.images.logoPath() == null || movie.images.logoPath().isEmpty()}"
+                        th:text="${movie.title}"
+                        class="movie-logo hero-title-main text-center w-full font-extrabold"
+                        style="padding:0;font-size:clamp(2.5rem,8vw,5.5rem);line-height:1;margin:0;">
+                    </h1>
+                </div>
+            </div>
+
+            <!-- ЛЕВАЯ КОЛОНКА: актёры -->
+<!--            <div class="hidden md:flex absolute inset-y-0 left-0-->
+<!--                        w-[42vw] md:w-[36vw] lg:w-[34vw] max-w-[560px]-->
+<!--                        px-6 md:px-10 items-center justify-center">-->
+<!--                <div class="actor-panel w-fit max-w-sm md:max-w-md mx-auto">-->
+<!--                    <ul class="movie-landing-actor-list space-y-1.5 max-h-[80%] w-fit text-left"-->
+<!--                        th:with="actors=${movie.persons != null ? movie.persons.?[role != null and (role.equalsIgnoreCase('actor') or role == 'Актер')] : {}}">-->
+<!--                        <li th:each="p : ${actors}"-->
+<!--                            th:text="${p.name != null ? p.name : p}"-->
+<!--                            class="actor-name text-lg md:text-2xl">-->
+<!--                            Имя актёра-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <!-- ПРАВАЯ КОЛОНКА: крупные рейтинги (логотипы слева от цифр) -->
+            <div class="hidden md:flex absolute right-0 bottom-[16vh] lg:bottom-[18vh] w-[42vw] md:w-[36vw] lg:w-[34vw] max-w-[560px] pr-6 md:pr-10 justify-center">
+                <div th:with="
+                     kpRating=${movie.ratings != null && movie.ratings.kp != null ? movie.ratings.kp : (movie.ratings != null && movie.ratings.kinopoisk != null ? movie.ratings.kinopoisk : movie.kpRating)},
+                     imdbRating=${movie.ratings != null && movie.ratings.imdb != null ? movie.ratings.imdb : movie.imdbRating}"
+                     class="flex gap-12 items-center">
+                    <!-- Кинопоиск -->
+                    <div class="flex items-center gap-3">
+                        <img src="/images/front/Kinopoisk_logo.png"
+                             alt="Кинопоиск"
+                             class="rating-source-icon kp-icon select-none" draggable="false" />
+                        <div class="movie-rating text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight tabular-nums">
+                            <span th:text="${kpRating != null ? #numbers.formatDecimal(kpRating,1,1) : '-'}">8.7</span>
+                        </div>
+                    </div>
+                    <!-- IMDb -->
+                    <div class="flex items-center gap-3">
+                        <img src="/images/front/IMDb_logo.png"
+                             alt="IMDb"
+                             class="rating-source-icon imdb-icon select-none" draggable="false" />
+                        <div class="movie-rating text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight tabular-nums">
+                            <span th:text="${imdbRating != null ? imdbRating : '-'}">8.3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /relative -->
     </div>
     <!-- /hero-контент -->
 
-    <!-- Контент: вся остальная информация — ниже, изначально невидима без прокрутки -->
+    <!-- Контент под фоном -->
     <main class="movie-body">
-        <div th:with="poster=${movie.images != null && movie.images.posterPath() != null ? movie.images.posterPath() : movie.posterPath()}"
-             class="mx-auto w-[90%] md:w-[80%] lg:w-[70%] max-w-6xl">
+        <!-- Убрали дубль блока «Участники/Рейтинги» из подвала -->
+        <!-- Существующий блок с постером/названием/мета/описанием -->
+        <div class="mx-auto w-[90%] md:w-[80%] lg:w-[70%] max-w-6xl" th:with="poster=${movie.images != null && movie.images.posterPath() != null ? movie.images.posterPath() : movie.posterPath()}">
 
             <div class="flex flex-col md:flex-row gap-6 md:gap-10">
                 <!-- Постер слева -->
@@ -84,7 +141,7 @@
 
                         <!-- Возрастной рейтинг (пытаемся найти одно из полей) -->
                         <span th:if="${movie.ageRating != null}"
-                              th:text="${movie.ageRating}"
+                              th:text="${movie.ageRating + '+'}"
                               class="px-2.5 py-1 rounded-full border border-white/15 text-gray-200 text-sm">
                         </span>
 <!--                        <span th:if="${movie.ageRating == null and movie.certification != null}"-->
@@ -93,19 +150,102 @@
 <!--                        </span>-->
                     </div>
 
+                    <!-- НОВЫЙ БЛОК: команда и бюджет -->
+                    <div class="credit-grid mb-6">
+                        <div th:if="${movie.crew['Director'] != null and !#lists.isEmpty(movie.crew['Director'])}">
+                            <div class="credit-label">Режиссёр</div>
+                            <div class="credit-value">
+                                <span th:each="p,stat : ${movie.crew['Director']}">
+                                    <span th:text="${p.name}">Имя режиссёра</span><span th:if="${!stat.last}">, </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div th:if="${movie.crew['Writer'] != null and !#lists.isEmpty(movie.crew['Writer'])}">
+                            <div class="credit-label">Сценарий</div>
+                            <div class="credit-value">
+                                <span th:each="p,stat : ${movie.crew['Writer']}">
+                                    <span th:text="${p.name}">Имя сценариста</span><span th:if="${!stat.last}">, </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div th:if="${movie.crew['Director of Photography'] != null and !#lists.isEmpty(movie.crew['Director of Photography'])}">
+                            <div class="credit-label">Оператор</div>
+                            <div class="credit-value">
+                                <span th:each="p,stat : ${movie.crew['Director of Photography']}">
+                                    <span th:text="${p.name}">Имя оператора</span><span th:if="${!stat.last}">, </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div th:if="${movie.crew['Composer'] != null and !#lists.isEmpty(movie.crew['Composer'])}">
+                            <div class="credit-label">Композитор</div>
+                            <div class="credit-value">
+                                <span th:each="p,stat : ${movie.crew['Composer']}">
+                                    <span th:text="${p.name}">Имя композитора</span><span th:if="${!stat.last}">, </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div th:if="${movie.budget != null}">
+                            <div class="credit-label">Бюджет</div>
+                            <div class="credit-value" th:text="${'$' + movie.budget}">$50 000 000</div>
+                        </div>
+                    </div>
+
                     <!-- Описание -->
                     <p class="text-gray-300/95 leading-relaxed text-base md:text-lg">
                         <span th:text="${movie.description != null ? movie.description : movie.overview}">Описание фильма...</span>
                     </p>
                 </div>
             </div>
-
-            <!-- Место под людей/доп.информацию на будущее -->
-            <section class="mt-10 border-t border-white/10 pt-8">
-                <!-- заглушка, позже заполните кастомным контентом -->
+            <section th:if="${movie.cast != null and !#lists.isEmpty(movie.cast)}"
+                     class="mt-12 border-t border-white/10 pt-4">
+                <h2 class="text-lg md:text-xl font-semibold mb-8 tracking-wide text-white/90">Состав</h2>
+                <div class="flex gap-6 items-start">
+                    <!-- Режиссёры с фото -->
+                    <div th:if="${movie.crew['Director'] != null and !#lists.isEmpty(movie.crew['Director'])}"
+                         class="director-column">
+                        <ul class="space-y-4">
+                            <li th:each="d : ${movie.crew['Director']}"
+                                class="actor-item">
+                                <div th:with="headshot=${d.profileImage == null ?
+                                      @environment.getProperty('app.images.tmdb-profile-icon') :
+                                      @environment.getProperty('app.images.tmdb-images-url') + d.profileImage()}">
+                                    <img th:src="@{${headshot}}"
+                                         th:alt="${d.name}"
+                                         class="actor-photo director-photo" />
+                                </div>
+                                <p class="actor-name mt-2 text-sm md:text-base" th:text="${d.name}">Имя режиссёра</p>
+                                <p class="actor-character">Режиссер</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Обёртка для скролла актёров -->
+                    <div class="flex-1 min-w-0">
+                        <div class="actor-strip">
+                            <div th:each="p : ${movie.cast}"
+                                 class="actor-item">
+                                <div th:with="headshot=${p.profileImage == null ?
+                                                    @environment.getProperty('app.images.tmdb-profile-icon') :
+                                                    @environment.getProperty('app.images.tmdb-images-url') + p.profileImage()}">
+                                    <img th:src="@{${headshot}}"
+                                         th:alt="${p.name}"
+                                         class="actor-photo" />
+                                </div>
+                                <p class="actor-name mt-2 text-sm md:text-base" th:text="${p.name}">Имя актёра</p>
+                                <p class="actor-character"
+                                   th:if="${p.characterName != null or p.role != null}"
+                                   th:text="${p.characterName != null ? p.characterName : p.role}">Персонаж</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
 
 </body>
+<script th:src="@{/js/movie-page.js}"></script>
 </html>

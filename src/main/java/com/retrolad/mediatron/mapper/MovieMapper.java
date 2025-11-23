@@ -2,10 +2,15 @@ package com.retrolad.mediatron.mapper;
 
 import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.dto.MovieDto;
+import com.retrolad.mediatron.dto.MoviePersonDto;
 import com.retrolad.mediatron.model.Movie;
 import com.retrolad.mediatron.service.MoviePersonOrderComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +21,9 @@ public class MovieMapper {
     private final MoviePersonOrderComparator orderComparator;
 
     public MovieDto toDto(Movie movie, String lang, ImageSize posterSize) {
+        List<MoviePersonDto> persons = movie.getPersons().stream()
+                .map(p -> moviePersonMapper.toDto(p, lang))
+                .toList();
         return new MovieDto(
                 movie.getId(),
                 movie.getOriginalTitle(),
@@ -25,6 +33,7 @@ public class MovieMapper {
                 movie.getTranslations().get(lang).getDescription(),
                 movie.getTranslations().get(lang).getTagline(),
                 movie.getRatingMpaa(),
+                movie.getBudget(),
                 movie.getAgeRating(),
                 movie.getGenres().stream()
                         .map(g -> GenreMapper.toDto(g, lang))
@@ -36,10 +45,13 @@ public class MovieMapper {
                 SourceMapper.toDto(movie.getVotes()),
                 SourceMapper.toDto(movie.getExternalIds()),
                 imageMapper.toDto(movie.getImages(), lang, posterSize),
-                movie.getPersons().stream()
-                        .map(p -> moviePersonMapper.toDto(p, lang))
-                        .sorted(orderComparator)
-                        .toList()
+                persons.stream()
+                        .filter(p -> p.role().equals("Actor"))
+                        .sorted(Comparator.comparingInt(MoviePersonDto::order))
+                        .toList(),
+                persons.stream()
+                        .filter(p -> !p.role().equals("Actor"))
+                        .collect(Collectors.groupingBy(MoviePersonDto::role))
         );
     }
 }
