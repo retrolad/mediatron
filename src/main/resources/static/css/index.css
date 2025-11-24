@@ -25,6 +25,11 @@ html, body {
 /* отступ под фиксированный фон — оставляем */
 body {
     padding-top: var(--movie-hero-h);
+    /* {added} флаг, если нужно стилизовать состояние между hero и контентом */
+}
+body[data-hero-scroll="active"] {
+    /* можно затемнить фон или добавить эффекты при желании */
+    /* transition: background-color .4s ease; */
 }
 
 /*** КАРУСЕЛЬ  ***/
@@ -580,4 +585,52 @@ body {
     font-weight: 600;
     color: #fff;
     box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+}
+
+/* === Hero meta & countries pills (добавлено) === */
+.hero-meta-item {
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    letter-spacing: .5px;
+}
+.hero-meta-sep {
+    color: rgba(255,255,255,0.35);
+    font-weight: 600;
+    transform: translateY(-1px);
+}
+.hero-countries .country-pill {
+    padding: 0.35rem 0.7rem;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: .05em;
+    /*border-radius: 9999px;*/
+    /*background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));*/
+    color: rgb(209 209 209 / 85%);
+    backdrop-filter: blur(4px) saturate(140%);
+    -webkit-backdrop-filter: blur(4px) saturate(140%);
+    /*box-shadow: 0 4px 12px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.08);*/
+    white-space: nowrap;
+}
+.hero-countries .country-pill:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+}
+
+/* Мобильная адаптация для мета-блока */
+@media (max-width: 480px) {
+    .hero-meta { gap: 0.6rem; }
+    .hero-countries .country-pill {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* {added} оптимизация сглаживания прокрутки во время анимации */
+html.hero-animating, body.hero-animating {
+    scroll-behavior: auto; /* отключаем встроенный smooth, чтобы не конфликтовать с JS */
+    cursor: grab;
+}
+html.hero-animating:active, body.hero-animating:active {
+    cursor: grabbing;
 }

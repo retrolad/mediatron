@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/index.css}" />
     <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-neutral-900 text-white antialiased">
+<body class="bg-neutral-900 text-white antialiased" data-hero-scroll="idle">
 
     <!-- Фоновое изображение (фиксированное) -->
     <div th:with="backdrop=${movie.images != null && movie.images.backdropPath() != null ? movie.images.backdropPath() : movie.backdropPath() }">
@@ -34,13 +34,38 @@
                 </p>
             </div>
 
+            <!-- НОВОЕ: мета-инфо (год • возраст • продолжительность) и страны -->
+            <div class="absolute inset-x-0 top-24 md:top-28 lg:top-32 z-30 flex flex-col items-center px-4 pointer-events-none"
+                 style="font-family: 'Jura'"
+                 th:with="hasMeta=${movie.year != null or movie.ageRating != null or movie.runtime != null}">
+                <div th:if="${hasMeta}"
+                     class="hero-meta flex flex-wrap items-center justify-center gap-3 text-sm md:text-base font-medium tracking-wide">
+                    <span th:if="${movie.year != null}" th:text="${movie.year}" class="hero-meta-item"></span>
+
+                    <span th:if="${movie.year != null and (movie.ageRating != null or movie.runtime != null)}" class="hero-meta-sep">•</span>
+
+                    <span th:if="${movie.ageRating != null}" th:text="${movie.ageRating + '+'}" class="hero-meta-item"></span>
+
+                    <span th:if="${movie.ageRating != null and movie.runtime != null}" class="hero-meta-sep">•</span>
+
+                    <span th:if="${movie.runtime != null}" th:text="${movie.runtime + ' мин'}" class="hero-meta-item"></span>
+                </div>
+
+                <div th:if="${movie.countries != null and !#lists.isEmpty(movie.countries)}"
+                     class="hero-countries mt-3 flex flex-wrap justify-center gap-2 max-w-4xl">
+                    <span th:each="c : ${movie.countries}"
+                          th:text="${c}"
+                          class="country-pill"></span>
+                </div>
+            </div>
+
             <!-- ЦЕНТР: лого или название (отдельный слой, не зависящий от ширины боковых колонок) -->
             <div class="absolute inset-x-0 bottom-[14vh] md:bottom-[16vh] lg:bottom-[18vh] z-10 flex justify-center">
-                <div class="px-6 w-[45vw] md:w-[35vw] lg:w-[28vw] min-w-[200px] max-w-[700px] flex items-center justify-center flex-col">
+                <div class="px-6 w-[45vw] md:w-[35vw] lg:w-[35vw] min-w-[200px] max-w-[700px] flex items-center justify-center flex-col">
                     <img th:if="${movie.images != null && movie.images.logoPath() != null and !movie.images.logoPath().isEmpty()}"
                          th:src="@{'/' + ${movie.images.logoPath()}}"
                          alt="Logo"
-                         class="movie-logo w-full h-auto object-contain drop-shadow-[0_6px_22px_rgba(0,0,0,0.55)]"
+                         class="movie-logo w-full h-auto max-h-[350px] object-contain drop-shadow-[0_6px_22px_rgba(0,0,0,0.55)]"
                          style="padding:0" />
                     <h1 th:if="${movie.images == null || movie.images.logoPath() == null || movie.images.logoPath().isEmpty()}"
                         th:text="${movie.title}"
@@ -188,9 +213,9 @@
                             </div>
                         </div>
 
-                        <div th:if="${movie.budget != null}">
+                        <div th:if="${movie.budget != null && movie.budget != 0}">
                             <div class="credit-label">Бюджет</div>
-                            <div class="credit-value" th:text="${'$' + movie.budget}">$50 000 000</div>
+                            <div class="credit-value" th:text="${'$' + #numbers.formatInteger(movie.budget, 0, 'COMMA')}">$50 000 000</div>
                         </div>
                     </div>
 
@@ -246,6 +271,6 @@
         </div>
     </main>
 
+    <script th:src="@{/js/movie-page.js}"></script>
 </body>
-<script th:src="@{/js/movie-page.js}"></script>
 </html>
