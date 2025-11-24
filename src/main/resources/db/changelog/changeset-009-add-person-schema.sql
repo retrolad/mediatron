@@ -25,7 +25,7 @@ create table if not exists person_translation
 --changeset retrolad:3
 create table if not exists movie_person
 (
-    movie_id       bigint references movie (id),
+    movie_id       bigint references movie (id) on delete cascade,
     person_id      bigint references person (id),
     role_id        int references person_role (id),
     character_name varchar(255),                            -- используется только, если роль "актер"
