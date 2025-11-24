@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.mapper;
 
-import com.retrolad.mediatron.model.MovieSourceData;
+import com.retrolad.mediatron.model.movie.MovieSourceData;
 
 import java.util.Map;
 import java.util.Set;

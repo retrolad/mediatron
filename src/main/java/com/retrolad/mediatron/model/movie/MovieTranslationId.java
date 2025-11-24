@@ -1,11 +1,10 @@
-package com.retrolad.mediatron.model;
+package com.retrolad.mediatron.model.movie;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,10 +12,10 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleTranslationId implements Serializable {
+public class MovieTranslationId implements Serializable {
 
-    @Column(name = "role_id")
-    private Integer roleId;
+    @Column(name = "movie_id")
+    private int movieId;
 
     @Column(name = "lang_code", length = 2)
     private String langCode;

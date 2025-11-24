@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.mapper;
 
-import com.retrolad.mediatron.model.Genre;
+import com.retrolad.mediatron.model.movie.Genre;
 
 public class GenreMapper {
 

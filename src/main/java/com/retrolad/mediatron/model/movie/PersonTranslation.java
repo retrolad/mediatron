@@ -1,8 +1,7 @@
-package com.retrolad.mediatron.model;
+package com.retrolad.mediatron.model.movie;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name = "person_translation")

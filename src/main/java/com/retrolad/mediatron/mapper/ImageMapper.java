@@ -3,7 +3,7 @@ package com.retrolad.mediatron.mapper;
 import com.retrolad.mediatron.dto.ImageDto;
 import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.dto.ImageType;
-import com.retrolad.mediatron.model.MovieImage;
+import com.retrolad.mediatron.model.movie.MovieImage;
 import com.retrolad.mediatron.service.ImageUrlBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

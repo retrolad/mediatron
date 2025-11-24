@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.mapper;
 
-import com.retrolad.mediatron.model.ProductionCountry;
+import com.retrolad.mediatron.model.movie.ProductionCountry;
 
 public class CountryMapper {
 

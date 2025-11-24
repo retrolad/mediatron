@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.repository;
 
-import com.retrolad.mediatron.model.Movie;
+import com.retrolad.mediatron.model.movie.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

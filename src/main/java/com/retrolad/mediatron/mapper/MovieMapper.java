@@ -3,7 +3,7 @@ package com.retrolad.mediatron.mapper;
 import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.dto.MovieDto;
 import com.retrolad.mediatron.dto.MoviePersonDto;
-import com.retrolad.mediatron.model.Movie;
+import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.service.MoviePersonOrderComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

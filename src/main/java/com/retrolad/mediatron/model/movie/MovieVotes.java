@@ -1,4 +1,4 @@
-package com.retrolad.mediatron.model;
+package com.retrolad.mediatron.model.movie;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
 package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.ImageSize;
-import com.retrolad.mediatron.model.MovieImage;
+import com.retrolad.mediatron.model.movie.MovieImage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

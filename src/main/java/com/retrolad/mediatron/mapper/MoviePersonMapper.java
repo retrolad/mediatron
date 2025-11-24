@@ -1,7 +1,7 @@
 package com.retrolad.mediatron.mapper;
 
 import com.retrolad.mediatron.dto.MoviePersonDto;
-import com.retrolad.mediatron.model.MoviePerson;
+import com.retrolad.mediatron.model.movie.MoviePerson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

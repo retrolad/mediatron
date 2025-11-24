@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.repository;
 
-import com.retrolad.mediatron.model.Person;
+import com.retrolad.mediatron.model.movie.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

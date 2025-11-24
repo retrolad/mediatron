@@ -1,7 +1,7 @@
 package com.retrolad.mediatron.mapper;
 
-import com.retrolad.mediatron.model.Role;
-import com.retrolad.mediatron.model.RoleTranslation;
+import com.retrolad.mediatron.model.movie.Role;
+import com.retrolad.mediatron.model.movie.RoleTranslation;
 import org.springframework.stereotype.Component;
 
 @Component
