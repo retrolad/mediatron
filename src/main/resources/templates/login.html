@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <link rel="stylesheet" th:href="@{/css/index.css}">
+  <!-- ...existing code... -->
+</head>
+<body class="min-h-screen bg-gray-900 text-white">
+  <div class="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+    <!-- Левая колонка: форма -->
+    <section class="flex items-center justify-center px-6 py-10 md:py-0">
+      <div class="w-full max-w-md">
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight mb-8">Вход в аккаунт</h1>
+        <form action="/login" method="post" class="space-y-6">
+          <!-- Email / Логин -->
+          <div>
+            <label for="username" class="block text-sm text-gray-300 mb-2">Логин или Email</label>
+            <input id="username" name="username" type="text" required
+                   class="input-underline w-full bg-transparent text-white placeholder-gray-500 focus:outline-none"
+                   placeholder="example@domain.com" autocomplete="username">
+          </div>
+
+          <!-- Пароль -->
+          <div>
+            <label for="password" class="block text-sm text-gray-300 mb-2">Пароль</label>
+            <input id="password" name="password" type="password" required
+                   class="input-underline w-full bg-transparent text-white placeholder-gray-500 focus:outline-none"
+                   placeholder="Введите пароль" autocomplete="current-password">
+          </div>
+
+          <!-- Доп. опции -->
+          <div class="flex items-center justify-between text-sm">
+            <label class="inline-flex items-center gap-2 select-none">
+              <input type="checkbox" name="remember-me"
+                     class="h-4 w-4 rounded border-gray-600 bg-transparent text-teal-400 focus:ring-0">
+              <span class="text-gray-300">Запомнить меня</span>
+            </label>
+            <a href="/forgot" class="text-teal-400 hover:text-teal-300 transition-colors">Забыли пароль?</a>
+          </div>
+
+          <!-- Кнопка входа -->
+          <button type="submit"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-md bg-teal-500 hover:bg-teal-400 text-gray-900 font-semibold py-3 transition-colors">
+            Войти
+          </button>
+
+          <!-- Разделитель -->
+          <div class="flex items-center gap-4 my-4">
+            <span class="h-px w-full bg-gray-700"></span>
+            <span class="text-xs text-gray-400">или</span>
+            <span class="h-px w-full bg-gray-700"></span>
+          </div>
+
+          <!-- Альтернативы (по желанию) -->
+          <div class="grid grid-cols-1 gap-3">
+            <button type="button"
+                    class="w-full rounded-md bg-gray-800 hover:bg-gray-700 text-gray-200 py-2.5 transition-colors">
+              Войти через GitHub
+            </button>
+          </div>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+      </div>
+    </section>
+
+    <!-- Правая колонка: место для изображения -->
+    <section class="relative hidden md:block">
+      <!-- Плейсхолдер (позже замените на реальное изображение) -->
+      <div class="absolute inset-0">
+        <!-- ...existing code... -->
+        <div class="h-full w-full bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-80"></div>
+        <!-- Пример вставки изображения:
+             <img src="/static/images/login-side.jpg" alt="" class="h-full w-full object-cover"/>
+        -->
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center px-6">
+          <p class="text-gray-300">Здесь будет изображение</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/javascript" th:src="@{/js/login.js}"></script>
+</body>
+</html>
+

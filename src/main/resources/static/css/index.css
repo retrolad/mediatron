@@ -18,15 +18,28 @@ html, body {
     min-height: 100%; /* было height: 100% */
     /* убран overflow: auto; чтобы документ мог расти и нормально скроллиться */
     color: white;
-    font-family: system-ui, sans-serif;
+    font-family: 'Open Sans', system-ui, sans-serif;
     background: #111827;
 }
 
 /* отступ под фиксированный фон — оставляем */
 body {
-    padding-top: var(--movie-hero-h);
+    /*padding-top: var(--movie-hero-h);*/
     /* {added} флаг, если нужно стилизовать состояние между hero и контентом */
 }
+
+/* {added} применяйте отступ только когда он нужен — на странице фильма */
+.with-hero {
+    padding-top: var(--movie-hero-h);
+}
+/* мобильные единицы тоже поддерживаем */
+@supports (height: 1dvh) {
+    .with-hero { padding-top: var(--movie-hero-h); }
+}
+@supports (height: 1svh) {
+    .with-hero { padding-top: var(--movie-hero-h); }
+}
+
 body[data-hero-scroll="active"] {
     /* можно затемнить фон или добавить эффекты при желании */
     /* transition: background-color .4s ease; */
@@ -633,4 +646,26 @@ html.hero-animating, body.hero-animating {
 }
 html.hero-animating:active, body.hero-animating:active {
     cursor: grabbing;
+}
+
+/* underline-инпут: только нижняя граница, плавные состояния */
+.input-underline {
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+    padding: 0.5rem 0.25rem;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.input-underline:hover {
+    border-bottom-color: rgba(255,255,255,0.45);
+}
+.input-underline:focus {
+    border-bottom-color: rgb(45 212 191); /* teal-400 */
+    box-shadow: 0 6px 0 -5px rgb(45 212 191 / 60%);
+}
+
+/* Подсказка/ошибка для инпутов (на будущее) */
+.input-hint {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 0.35rem;
 }

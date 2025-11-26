@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/changeset-008-add-role-schema.sql
   - include:
       file: db/changelog/changeset-009-add-person-schema.sql
+  - include:
+      file: db/changelog/changeset-010-add-user-schema.sql

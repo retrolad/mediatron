@@ -10,7 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/index.css}" />
     <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-neutral-900 text-white antialiased" data-hero-scroll="idle">
+<!-- добавил класс with-hero; оставил pt-[var(--movie-hero-h)] для Tailwind-совместимости -->
+<body class="with-hero pt-[var(--movie-hero-h)] bg-neutral-900 text-white antialiased" data-hero-scroll="idle">
 
     <!-- Фоновое изображение (фиксированное) -->
     <div th:with="backdrop=${movie.images != null && movie.images.backdropPath() != null ? movie.images.backdropPath() : movie.backdropPath() }">
