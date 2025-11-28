@@ -1,6 +1,9 @@
 package com.retrolad.mediatron.repository;
 
 import com.retrolad.mediatron.model.movie.Movie;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,4 +44,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     WHERE t.langCode = :lang and m.id = :id
     """)
     Optional<Movie> findByIdWithTranslation(@Param("id") Long id, @Param("lang") String lang);
+
+    @Query("""
+        SELECT DISTINCT m
+        FROM Movie m
+        JOIN m.translations mt on mt.langCode = :lang
+    """)
+    Page<Movie> findMovieCards(String lang, Pageable pageable);
 }

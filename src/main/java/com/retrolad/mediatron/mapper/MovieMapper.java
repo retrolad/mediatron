@@ -1,8 +1,6 @@
 package com.retrolad.mediatron.mapper;
 
-import com.retrolad.mediatron.dto.ImageSize;
-import com.retrolad.mediatron.dto.MovieDto;
-import com.retrolad.mediatron.dto.MoviePersonDto;
+import com.retrolad.mediatron.dto.*;
 import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.service.MoviePersonOrderComparator;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,6 +18,18 @@ public class MovieMapper {
     private final ImageMapper imageMapper;
     private final MoviePersonMapper moviePersonMapper;
     private final MoviePersonOrderComparator orderComparator;
+
+    public MovieCardDto toMovieCardDto(Movie movie, String lang, ImageSize posterSize) {
+        Map<String, Float> ratings = SourceMapper.toDto(movie.getRatings());
+        return new MovieCardDto(
+                movie.getId(),
+                movie.getTranslations().get(lang).getTitle(),
+                imageMapper.toDto(movie.getImages(), lang, posterSize).posterPath(),
+                movie.getYear(),
+                ratings.get(SourceName.IMDB.name().toLowerCase()),
+                ratings.get(SourceName.KP.name().toLowerCase())
+        );
+    }
 
     public MovieDto toDto(Movie movie, String lang, ImageSize posterSize) {
         List<MoviePersonDto> persons = movie.getPersons().stream()

@@ -9,7 +9,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: true
+        format_sql: true
 
   thymeleaf:
     cache: false
@@ -17,7 +20,16 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: TRACE
+
+    # Уровень DEBUG покажет параметры, подставляемые вместо '?'
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.stat: debug
+
+    # Также полезно для общего дебага Hibernate
+    org.hibernate.SQL: DEBUG
+#    org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
+
 app:
   images:
     base-dir: images

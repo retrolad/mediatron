@@ -14,31 +14,51 @@ import java.util.*;
 @AllArgsConstructor
 @Data
 @Builder
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
+@NamedEntityGraph(
+        name = "Movie.movieCard",
+        attributeNodes = {
+                @NamedAttributeNode(value = "translations"),
+                @NamedAttributeNode(value = "images"),
+                @NamedAttributeNode(value = "images"),
+                @NamedAttributeNode(value = "ratings"),
+                @NamedAttributeNode(value = "ratings")
+        }
+)
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
 
     @Column(nullable = false)
+    @ToString.Include
     private String originalTitle;
 
     @Column(nullable = false)
+    @ToString.Include
     private int year;
 
     @Column(nullable = false)
+    @ToString.Include
     private int runtime;
 
+    @ToString.Include
     private String ratingMpaa;
 
+    @ToString.Include
     private Short ageRating;
 
+    @ToString.Include
     private Long budget;
 
+    @ToString.Include
     private String originalLanguage;
 
+    @ToString.Include
     private LocalDate releaseDate;
 
+    @ToString.Include
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
