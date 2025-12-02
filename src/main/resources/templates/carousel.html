@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <div th:replace="fragments/layout :: common_header('Movie Carousel')"></div>
+</head>
+<body class="bg-neutral-900">
+
+<div class="grid grid-cols-12 min-h-screen">
+    <!-- Левая колонка: карусель -->
+    <!-- Левая колонка фиксирована по высоте, не влияет на высоту страницы -->
+    <div class="col-span-4 relative border-r border-neutral-800 flex items-center justify-center sticky top-0 h-screen overflow-hidden">
+        <div id="carousel" class="fade-in" tabindex="0" role="listbox" aria-label="Годы">
+            <div th:each="y, iter : ${years}"
+                 th:data-year="${y}"
+                 class="year-section">
+                <div class="year font-mono"
+                     th:text="${y}"
+                     hx-get="/movies-list"
+                     th:attr="hx-get=@{/movies-list(year=${y}, lang=${lang})}"
+                     hx-target="#movies-list"
+                     hx-swap="innerHTML">
+                </div>
+            </div>
+        </div>
+        <div class="hint">Колесо мыши ↑↓ или стрелки ↑↓</div>
+    </div>
+    <!-- Правая колонка: скролл только для списка фильмов -->
+    <div id="movies-list" class="col-span-8 p-8 fade-target overflow-y-auto max-h-screen">
+        <div class="text-neutral-400 text-center">
+            Выберите год, чтобы увидеть фильмы
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/carousel.js}"></script>
+
+</body>
+</html>

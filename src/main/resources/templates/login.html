@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Вход</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-  <link rel="stylesheet" th:href="@{/css/index.css}">
+  <div th:replace="fragments/layout :: common_header(Login)"></div>
   <!-- ...existing code... -->
 </head>
 <body class="min-h-screen bg-gray-900 text-white">
@@ -36,15 +31,15 @@
           <div class="flex items-center justify-between text-sm">
             <label class="inline-flex items-center gap-2 select-none">
               <input type="checkbox" name="remember-me"
-                     class="h-4 w-4 rounded border-gray-600 bg-transparent text-teal-400 focus:ring-0">
+                     class="h-4 w-4 rounded border-gray-600 bg-transparent text-purple-400 focus:ring-0">
               <span class="text-gray-300">Запомнить меня</span>
             </label>
-            <a href="/forgot" class="text-teal-400 hover:text-teal-300 transition-colors">Забыли пароль?</a>
+            <a href="/forgot" class="text-purple-400 hover:text-purple-300 transition-colors">Забыли пароль?</a>
           </div>
 
           <!-- Кнопка входа -->
           <button type="submit"
-                  class="w-full inline-flex items-center justify-center gap-2 rounded-md bg-teal-500 hover:bg-teal-400 text-gray-900 font-semibold py-3 transition-colors">
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-md bg-purple-500 hover:bg-purple-400 text-gray-100 font-semibold py-3 transition-colors">
             Войти
           </button>
 

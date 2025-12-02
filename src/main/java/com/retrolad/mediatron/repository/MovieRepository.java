@@ -51,4 +51,25 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         JOIN m.translations mt on mt.langCode = :lang
     """)
     Page<Movie> findMovieCards(String lang, Pageable pageable);
+
+    @Query("""
+        SELECT m.id
+        FROM Movie m
+        JOIN m.translations t
+            on t.langCode = :lang
+    """)
+    List<Long> findMovieIdsByLang(String lang, Pageable pageable);
+
+    @EntityGraph(attributePaths = {
+        "translations",
+        "images",
+        "images.type",
+        "genres"
+    })
+    @Query("""
+        SELECT m
+        FROM Movie m
+        WHERE m.id in :ids
+    """)
+    List<Movie> findMovieByIds(List<Long> ids);
 }

@@ -2,6 +2,7 @@
     --section-height: 20vh;
     --movie-hero-h: 100vh;    /* {changed} фон на всю высоту первого экрана */
     --poster-height: 330px;  /* базовая высота постера */
+    --background-main: #262626;
 }
 
 /* Используем динамические единицы высоты экрана, когда доступны (мобилки) */
@@ -15,11 +16,10 @@
 html, body {
     margin: 0;
     padding: 0;
-    min-height: 100%; /* было height: 100% */
-    /* убран overflow: auto; чтобы документ мог расти и нормально скроллиться */
+    min-height: 100%;
     color: white;
     font-family: 'Open Sans', system-ui, sans-serif;
-    background: #111827;
+    background: var(--background-main);
 }
 
 /* отступ под фиксированный фон — оставляем */
@@ -602,7 +602,8 @@ body[data-hero-scroll="active"] {
 
 /* === Hero meta & countries pills (добавлено) === */
 .hero-meta-item {
-    color: rgba(255,255,255,0.92);
+    color: #8e8e8e;
+    font-size: 1.6rem;
     text-shadow: 0 3px 12px rgba(0,0,0,0.5);
     letter-spacing: .5px;
 }
@@ -610,6 +611,11 @@ body[data-hero-scroll="active"] {
     color: rgba(255,255,255,0.35);
     font-weight: 600;
     transform: translateY(-1px);
+}
+.hero-age-rating {
+    background: #F44336;
+    padding: 7px;
+    color: white;
 }
 .hero-countries .country-pill {
     padding: 0.35rem 0.7rem;
@@ -637,6 +643,9 @@ body[data-hero-scroll="active"] {
         font-size: 0.65rem;
         padding: 0.3rem 0.6rem;
     }
+    /* на очень узких экранах выровняем заголовок по центру, а остальное оставим слева */
+    .hero-info-content { align-items: flex-start; }
+    #hero-info-title { text-align: center; width: 100%; }
 }
 
 /* {added} оптимизация сглаживания прокрутки во время анимации */
@@ -659,8 +668,8 @@ html.hero-animating:active, body.hero-animating:active {
     border-bottom-color: rgba(255,255,255,0.45);
 }
 .input-underline:focus {
-    border-bottom-color: rgb(45 212 191); /* teal-400 */
-    box-shadow: 0 6px 0 -5px rgb(45 212 191 / 60%);
+    border-bottom-color: rgb(168, 85, 247);
+    box-shadow: 0 6px 0 -5px #A855F799;
 }
 
 /* Подсказка/ошибка для инпутов (на будущее) */
@@ -668,4 +677,203 @@ html.hero-animating:active, body.hero-animating:active {
     font-size: 0.75rem;
     color: rgba(255,255,255,0.65);
     margin-top: 0.35rem;
+}
+
+/* Прозрачная закреплённая навигация */
+.site-nav {
+    background: rgba(7,11,17,0.36);             /* чуть тёмнее для контраста */
+    backdrop-filter: blur(6px) saturate(110%);
+    -webkit-backdrop-filter: blur(6px) saturate(110%);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* делаем внутренние элементы навбара интерактивными (овал работает pointer-events у .site-nav) */
+.site-nav * { pointer-events: auto; }
+
+/* небольшой responsive-фикc для поиска */
+@media (max-width: 640px) {
+    .site-nav input[type="search"] { width: 12rem; }
+}
+
+/* === HERO CAROUSEL (главная) === */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: saturate(105%) contrast(102%);
+    transition: background-image .35s ease, transform .45s cubic-bezier(.2,.8,.2,1), filter .45s ease;
+    will-change: background-image, transform, filter;
+    z-index: 0;
+}
+.hero-bg::after {
+    /* лёгкое затемнение поверх фона для читаемости правого блока */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 120% at 80% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%);
+    pointer-events: none;
+}
+
+/* Контейнер горизонтальной карусели постеров справа */
+.hc-wrap {
+    position: absolute;
+    right: 6vw;                 /* чуть левее правого края */
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(50vw, 980px);    /* половина ширины */
+    height: min(55vh, 520px);   /* было min(50vh, 520px) — визуально компактнее */
+    display: grid;               /* точное центрирование по вертикали/горизонтали */
+    place-items: center;
+    overflow-x: hidden;          /* скрываем лишнее по горизонтали (ровно 5 постеров) */
+    overflow-y: visible;         /* разрешаем вертикальный выход, чтобы масштаб не обрезался */
+    z-index: 2;                 /* поверх фона/оверлея */
+    pointer-events: auto;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 11px #181818cf;
+}
+
+/* Лента постеров — центр и плавная анимация */
+.hc-strip {
+    display: flex;
+    align-items: center;         /* вертикальное центрирование постеров в ленте */
+    gap: 0;                             /* {changed} постеры касаются друг друга */
+    height: 100%;
+    transition: transform .55s cubic-bezier(.2,.8,.2,1); /* {added} плавный докрут до центра */
+    will-change: transform;
+}
+.hc-strip.animating { cursor: grabbing; }
+.hc-strip.animating .hc-poster { pointer-events: none; }
+
+/* Элемент / состояния (active / near / far / dim) и размеры — без изменений */
+.hc-item {
+    flex: 0 0 20%;
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;         /* центр по вертикали внутри ячейки */
+    justify-content: center;
+    opacity: 1;              /* базово — без приглушения; зададим на уровне постера */
+    transform: none;
+    transition: opacity .25s ease, filter .25s ease;
+    will-change: opacity, filter;
+    position: relative;         /* для управления z-index перекрытий */
+    z-index: 1;
+}
+
+/* Порядок перекрытий: активный сверху, затем соседи, затем дальние */
+.hc-item.active { z-index: 3; }
+.hc-item.near   { z-index: 2; }
+.hc-item.far    { z-index: 1; }
+
+/* Выбранный постер — без подсветки, лишь немного крупнее */
+.hc-item.active .hc-poster {
+    /* удаляем обводку и инсет‑тень */
+    outline: none;
+    transform: scale(1.08);
+    opacity: .85;
+}
+
+/* Соседи на ±1 позиции — уменьшаем и компенсируем визуальную «щель»
+   - шкала 0.92 → половина недостающей ширины ≈ 0.8% от контейнера c каждой стороны */
+.hc-item.near {
+    margin-left: -0.8%;
+    margin-right: -0.8%;
+}
+.hc-item.near .hc-poster {
+    transform: scale(0.92);
+    opacity: 0.60;
+}
+
+/* Элементы на ±2 позиции — ещё меньше
+   - шкала 0.84 → половина недостающей ширины ≈ 1.6% с каждой стороны */
+.hc-item.far {
+    margin-left: -1.6%;
+    margin-right: -1.6%;
+}
+.hc-item.far .hc-poster {
+    transform: scale(0.84);
+    opacity: 0.20;
+}
+
+/* Всё, что дальше — максимально приглушено (при необходимости можно тоже слегка поджать) */
+.hc-item.dim .hc-poster {
+    /* Было opacity .25 – теперь полностью скрываем дальние (>2 позиции) */
+    transform: scale(.80);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Убираем любые hover-акценты у неактивных постеров */
+.hc-item:not(.active) .hc-poster:hover {
+    box-shadow: none;
+    filter: none;
+}
+
+/* Ранее добавленная подсветка рамкой — окончательно убрана */
+.hc-item.active .hc-poster {
+    outline: none;
+}
+
+/* Левый блок информации в hero */
+.hero-info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
+/* Фиксированная область для логотипа — не растягивает блок с мета/описанием */
+.hero-logo-wrap {
+    flex: 0 0 120px;          /* фиксированная высота области логотипа */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;         /* запас для очень маленьких экранов */
+    max-height: 140px;        /* предохранитель от слишком больших логотипов */
+    overflow: hidden;         /* обрезаем лишнее у слишком большого изображения */
+}
+
+/* Логотип: ограничиваем по высоте, центрируем */
+.hero-info-logo {
+    max-height: 100%;
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* Заголовок занимает то же место, что и логотип, и выравнивается по центру */
+#hero-info-title {
+    margin: 0;
+    padding: 0;
+    line-height: 1.05;
+}
+
+/* Контент (мета + описание) — гибкий, не зависит от размера логотипа */
+.hero-info-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* теперь контент выравнивается слева внутри блока */
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+}
+
+/* Немного уменьшим максимальную ширину описания, чтобы было красиво */
+#hero-info-description {
+    max-width: 100%;
+    margin: 0;
+    /* при необходимости текст может переноситься аккуратно */
+    word-break: break-word;
+}
+
+/* Если логотип отсутствует, заголовок остаётся в той же фиксированной области визуально.
+   При необходимости можно увеличить мобильные размеры: */
+@media (max-width: 640px) {
+    .hero-logo-wrap { flex: 0 0 90px; min-height: 60px; max-height: 110px; }
+    #hero-info-title { font-size: 1.25rem; }
 }

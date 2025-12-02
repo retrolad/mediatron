@@ -1,11 +1,16 @@
 package com.retrolad.mediatron.mapper;
 
 import com.retrolad.mediatron.dto.*;
+import com.retrolad.mediatron.model.movie.Genre;
 import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.service.MoviePersonOrderComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,24 @@ public class MovieMapper {
                 movie.getYear(),
                 ratings.get(SourceName.IMDB.name().toLowerCase()),
                 ratings.get(SourceName.KP.name().toLowerCase())
+        );
+    }
+
+    public MovieHeroDto toMovieHeroDto(Movie movie, String lang, ImageSize posterSize) {
+        Duration duration = Duration.ofMinutes(movie.getRuntime());
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes();
+
+        return new MovieHeroDto(
+                movie.getId(),
+                movie.getYear(),
+                movie.getTranslations().get(lang).getTitle(),
+                movie.getOriginalTitle(),
+                movie.getTranslations().get(lang).getDescription(),
+                String.format("%dh %dmin", hours, minutes),
+                movie.getAgeRating(),
+                movie.getGenres().stream().map(Genre::getName).toList(),
+                imageMapper.toDto(movie.getImages(), lang, posterSize)
         );
     }
 
