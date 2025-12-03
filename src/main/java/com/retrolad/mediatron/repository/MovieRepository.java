@@ -16,33 +16,31 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("""
-    SELECT DISTINCT m.year FROM Movie m
+        SELECT DISTINCT m.year FROM Movie m
     """)
     List<Integer> findAllYears();
 
     @Query("""
-    SELECT DISTINCT m FROM Movie m
-    JOIN m.translations t
-    WHERE m.year = :year and t.langCode = :lang
+        SELECT DISTINCT m
+        FROM Movie m
+        JOIN m.translations t
+        WHERE m.year = :year and t.langCode = :lang
     """)
     List<Movie> findByYearWithTranslation(@Param("year") int year, @Param("lang") String lang);
 
     @Query("""
-        SELECT DISTINCT m FROM Movie m
+        SELECT DISTINCT m
+        FROM Movie m
         JOIN m.translations t
         WHERE t.langCode = :lang
     """)
     List<Movie> findWithTranslation(String lang, Pageable pageable);
 
     @Query("""
-    SELECT DISTINCT m FROM Movie m
-    JOIN FETCH m.translations t
-    JOIN FETCH m.genres g
-    JOIN FETCH m.productionCountries pc
-    JOIN FETCH m.ratings r
-    JOIN FETCH m.votes v
-    JOIN FETCH m.externalIds e
-    WHERE t.langCode = :lang and m.id = :id
+        SELECT DISTINCT m
+        FROM Movie m
+        JOIN m.translations t
+        WHERE t.langCode = :lang and m.id = :id
     """)
     Optional<Movie> findByIdWithTranslation(@Param("id") Long id, @Param("lang") String lang);
 
