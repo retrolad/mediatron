@@ -3,6 +3,7 @@ package com.retrolad.mediatron.controller;
 import com.retrolad.mediatron.dto.ImageSize;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,19 +17,30 @@ public class MovieRestController {
 
     private MovieService movieService;
 
+    // TODO Перехватывать lang в фильтре?
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam(required = false) String lang) {
         return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<?> getCards(@PageableDefault(size = 10, sort = "createdAt,desc") Pageable pageable) {
+    public ResponseEntity<?> getCards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(movieService.getMovieCards(pageable));
     }
 
     @GetMapping("/hero")
-    public ResponseEntity<?> getHero(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+    public ResponseEntity<?> getHero(@PageableDefault(size = 5, sort = "year", direction = Sort.Direction.DESC)
                                          Pageable pageable) {
         return ResponseEntity.ok(movieService.getMovieHero(pageable));
+    }
+
+    @GetMapping("/years")
+    public ResponseEntity<?> getYears() {
+        return ResponseEntity.ok(movieService.getAllYears());
+    }
+
+    @GetMapping("/years/{year}")
+    public ResponseEntity<?> getByYear(@PathVariable Integer year, @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getByYear(year, ImageSize.FULL, lang));
     }
 }

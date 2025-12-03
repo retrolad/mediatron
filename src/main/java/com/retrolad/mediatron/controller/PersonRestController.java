@@ -3,13 +3,12 @@ package com.retrolad.mediatron.controller;
 import com.retrolad.mediatron.dto.PersonDto;
 import com.retrolad.mediatron.service.PersonService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/api/persons")
 @RequiredArgsConstructor
-public class PersonController {
+public class PersonRestController {
 
     private final PersonService personService;
 
