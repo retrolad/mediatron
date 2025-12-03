@@ -3,14 +3,12 @@ package com.retrolad.mediatron.mapper;
 import com.retrolad.mediatron.dto.*;
 import com.retrolad.mediatron.model.movie.Genre;
 import com.retrolad.mediatron.model.movie.Movie;
-import com.retrolad.mediatron.service.MoviePersonOrderComparator;
+import com.retrolad.mediatron.utils.SourceName;
+import com.retrolad.mediatron.utils.images.ImageSize;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +20,10 @@ public class MovieMapper {
 
     private final ImageMapper imageMapper;
     private final MoviePersonMapper moviePersonMapper;
-    private final MoviePersonOrderComparator orderComparator;
+    private final SourceMapper sourceMapper;
 
     public MovieCardDto toMovieCardDto(Movie movie, String lang, ImageSize posterSize) {
-        Map<String, Float> ratings = SourceMapper.toDto(movie.getRatings());
+        Map<String, Float> ratings = sourceMapper.toDto(movie.getRatings());
         return new MovieCardDto(
                 movie.getId(),
                 movie.getTranslations().get(lang).getTitle(),
@@ -39,7 +37,7 @@ public class MovieMapper {
     public MovieHeroDto toMovieHeroDto(Movie movie, String lang, ImageSize posterSize) {
         Duration duration = Duration.ofMinutes(movie.getRuntime());
         long hours = duration.toHours();
-        long minutes = duration.toMinutes();
+        long minutes = duration.toMinutesPart();
 
         return new MovieHeroDto(
                 movie.getId(),
@@ -70,14 +68,14 @@ public class MovieMapper {
                 movie.getBudget(),
                 movie.getAgeRating(),
                 movie.getGenres().stream()
-                        .map(g -> GenreMapper.toDto(g, lang))
+                        .map(g -> g.getTranslations().get(lang))
                         .toList(),
                 movie.getProductionCountries().stream()
-                        .map(c -> CountryMapper.toDto(c, lang))
+                        .map(c -> c.getTranslations().get(lang))
                         .toList(),
-                SourceMapper.toDto(movie.getRatings()),
-                SourceMapper.toDto(movie.getVotes()),
-                SourceMapper.toDto(movie.getExternalIds()),
+                sourceMapper.toDto(movie.getRatings()),
+                sourceMapper.toDto(movie.getVotes()),
+                sourceMapper.toDto(movie.getExternalIds()),
                 imageMapper.toDto(movie.getImages(), lang, posterSize),
                 persons.stream()
                         .filter(p -> p.role().equals("Actor"))

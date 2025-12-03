@@ -1,4 +1,4 @@
-package com.retrolad.mediatron.dto;
+package com.retrolad.mediatron.utils.images;
 
 public enum ImageSize {
     THUMB,

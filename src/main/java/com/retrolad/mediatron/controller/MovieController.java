@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.controller;
 
-import com.retrolad.mediatron.dto.ImageSize;
+import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.service;
 
-import com.retrolad.mediatron.dto.ImageSize;
+import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.dto.MovieCardDto;
 import com.retrolad.mediatron.dto.MovieDto;
 import com.retrolad.mediatron.dto.MovieHeroDto;
@@ -9,7 +9,6 @@ import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
