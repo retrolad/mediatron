@@ -6,17 +6,12 @@ import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.utils.images.ImageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class ImageUrlBuilderTest {
 
     private UrlBuilder urlBuilder;
@@ -26,8 +21,7 @@ public class ImageUrlBuilderTest {
     void setUp() {
         urlBuilder = new UrlBuilder();
         // Простой String.join можно не мокать
-        imageUrlBuilder = new ImageUrlBuilder(urlBuilder);
-        ReflectionTestUtils.setField(imageUrlBuilder, "baseDir", "images");
+        imageUrlBuilder = new ImageUrlBuilder("images", urlBuilder);
     }
 
     private MovieImage mockImage(ImageType type, String url) {
@@ -48,7 +42,7 @@ public class ImageUrlBuilderTest {
     }
 
     @Test
-    void buildsFullSizedPosterUrl_() {
+    void buildsFullSizedPosterUrl() {
         MovieImage image = mockImage(ImageType.POSTER, "abc");
         String result = imageUrlBuilder.buildImageUrl(image, "ru", ImageSize.FULL);
 

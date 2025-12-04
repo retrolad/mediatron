@@ -13,7 +13,6 @@ import java.util.Arrays;
  * Собирает полный путь изображений для разных типов и масштабов
  */
 @Service
-@RequiredArgsConstructor
 public class ImageUrlBuilder {
 
     private final UrlBuilder urlBuilder;
@@ -23,8 +22,13 @@ public class ImageUrlBuilder {
     private final String SIZE_ORIGINAL = "original";
     private final String imageExt = ".jpg";
 
-    @Value("${app.images.base-dir}")
-    private String baseDir;
+    private final String baseDir;
+
+    public ImageUrlBuilder(@Value("${app.images.base-dir}") String baseDir,
+                           UrlBuilder urlBuilder) {
+        this.baseDir = baseDir;
+        this.urlBuilder = urlBuilder;
+    }
 
     public String buildImageUrl(MovieImage image, String lang, ImageSize posterSize) {
         ImageType type = ImageType.valueOf(image.getType().getName().toUpperCase());
