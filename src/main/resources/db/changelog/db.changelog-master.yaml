@@ -19,3 +19,5 @@ databaseChangeLog:
       file: db/changelog/changeset-009-add-person-schema.sql
   - include:
       file: db/changelog/changeset-010-add-user-schema.sql
+  - include:
+      file: db/changelog/changeset-011-alter-user-password-nullable.sql

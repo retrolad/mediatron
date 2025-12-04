@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.NullSecurityContextRepository;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -24,23 +25,28 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+    private final OidcAuthSuccessHandler authSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/images/**").permitAll()
-//                        .requestMatchers("/admin/**", "/api/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/register", "/css/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**", "/api/**").hasRole("ADMIN")
+                        .requestMatchers("/oauth2/authorization/**").permitAll()
                         .anyRequest().permitAll())
-                .formLogin(login -> login
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true))
-                .logout(logout -> logout.logoutSuccessUrl("/login?logout"))
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(authSuccessHandler))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout"))
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .rememberMe(withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//                .securityContext(context -> context
+//                        .securityContextRepository(new NullSecurityContextRepository()));
 
         return http.build();
     }

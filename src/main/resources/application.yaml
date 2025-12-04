@@ -13,6 +13,13 @@ spring:
       hibernate:
 #        generate_statistics: true
         format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1095820494475-49tddgkumsfitjj2b69ab1cd9vu9ipb6.apps.googleusercontent.com
+            client-secret: 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
 
   thymeleaf:
     cache: false
@@ -33,10 +40,6 @@ logging:
 app:
   images:
     base-dir: images
-    posters-dir: ${app.images.base-dir}/poster
-    backdrop-dir: ${app.images.base-dir}/backdrop
-    logos-dir: ${app.images.base-dir}/logo
     tmdb-images-url: https://image.tmdb.org/t/p/original
-    tmdb-profile-icon: https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg
   lang:
     default: ru
