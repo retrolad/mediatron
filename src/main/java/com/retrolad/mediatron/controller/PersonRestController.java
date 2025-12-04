@@ -13,7 +13,7 @@ public class PersonRestController {
     private final PersonService personService;
 
     @GetMapping("/{id}")
-    public PersonDto getById(@PathVariable Long id, @RequestParam(required = false) String langCode) {
-        return personService.getById(id, langCode);
+    public PersonDto getById(@PathVariable Long id, @RequestParam(required = false) String lang) {
+        return personService.getById(id, lang);
     }
 }

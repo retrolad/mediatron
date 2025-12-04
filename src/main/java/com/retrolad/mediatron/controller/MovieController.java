@@ -24,9 +24,9 @@ public class MovieController {
 
     @GetMapping
     public String getIndex(Model model, @PageableDefault(size = 5, sort = "year", direction = Sort.Direction.DESC)
-            Pageable heroPageable) {
+            Pageable heroPageable, @RequestParam(required = false) String lang) {
 
-        model.addAttribute("movieHero", movieService.getMovieHero(heroPageable));
+        model.addAttribute("movieHero", movieService.getMovieHero(heroPageable, lang));
         return "index";
     }
 

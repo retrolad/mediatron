@@ -16,21 +16,22 @@ public class MovieRestController {
 
     private MovieService movieService;
 
-    // TODO Перехватывать lang в фильтре?
+    // TODO Избавиться от передачи локалей в каждом методе контроллеров и сервисов
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam(required = false) String lang) {
         return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<?> getCards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(movieService.getMovieCards(pageable));
+    public ResponseEntity<?> getCards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                      @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getMovieCards(pageable, lang));
     }
 
     @GetMapping("/hero")
     public ResponseEntity<?> getHero(@PageableDefault(size = 5, sort = "year", direction = Sort.Direction.DESC)
-                                         Pageable pageable) {
-        return ResponseEntity.ok(movieService.getMovieHero(pageable));
+                                     Pageable pageable, @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getMovieHero(pageable, lang));
     }
 
     @GetMapping("/years")
