@@ -27,7 +27,6 @@ import java.util.*;
 )
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
 
