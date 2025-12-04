@@ -6,7 +6,12 @@ import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.utils.images.ImageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -33,35 +38,21 @@ public class ImageUrlBuilderTest {
         return image;
     }
 
-    @Test
-    void buildsBackdropUrl() {
-        MovieImage image = mockImage(ImageType.BACKDROP, "abc");
-        String result = imageUrlBuilder.buildImageUrl(image, null, null);
+    @ParameterizedTest
+    @MethodSource("getArgumentsForTest")
+    void buildsBackdropUrl(ImageType imageType, String url, String lang, ImageSize posterSize, String expected) {
+        MovieImage image = mockImage(imageType, url);
+        String result = imageUrlBuilder.buildImageUrl(image, lang, posterSize);
 
-        assertThat(result).isEqualTo("images/backdrop/abc.jpg");
+        assertThat(result).isEqualTo(expected);
     }
 
-    @Test
-    void buildsFullSizedPosterUrl() {
-        MovieImage image = mockImage(ImageType.POSTER, "abc");
-        String result = imageUrlBuilder.buildImageUrl(image, "ru", ImageSize.FULL);
-
-        assertThat(result).isEqualTo("images/poster/ru/original/abc.jpg");
-    }
-
-    @Test
-    void buildsThumbPosterUrl() {
-        MovieImage image = mockImage(ImageType.POSTER, "poster12");
-        String result = imageUrlBuilder.buildImageUrl(image, "en", ImageSize.THUMB);
-
-        assertThat(result).isEqualTo("images/poster/en/w220/poster12.jpg");
-    }
-
-    @Test
-    void buildsLogoUrl() {
-        MovieImage image = mockImage(ImageType.LOGO, "logo69");
-        String result = imageUrlBuilder.buildImageUrl(image, "de", ImageSize.THUMB);
-
-        assertThat(result).isEqualTo("images/logo/de/logo69.jpg");
+    static Stream<Arguments> getArgumentsForTest() {
+        return Stream.of(
+                Arguments.of(ImageType.BACKDROP, "abc123", null, null, "images/backdrop/abc123.jpg"),
+                Arguments.of(ImageType.POSTER, "poster1", "ru", ImageSize.FULL, "images/poster/ru/original/poster1.jpg"),
+                Arguments.of(ImageType.POSTER, "poster2", "en", ImageSize.THUMB, "images/poster/en/w220/poster2.jpg"),
+                Arguments.of(ImageType.LOGO, "logo69", "de", ImageSize.MEDIUM, "images/logo/de/logo69.jpg")
+        );
     }
 }
