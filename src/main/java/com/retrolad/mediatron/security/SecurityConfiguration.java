@@ -1,6 +1,7 @@
 package com.retrolad.mediatron.security;
 
 import com.retrolad.mediatron.security.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,10 +42,18 @@ public class SecurityConfiguration {
 //                        .requestMatchers("/admin/**", "/api/**").hasRole("ADMIN")
                         .requestMatchers("/oauth2/authorization/**").permitAll()
                         .anyRequest().permitAll())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authSuccessHandler))
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout"))
+                // Отключаем поведение по умолчанию, при котором после неудачи аутентификации, управление
+                // передается OAuth2 login entry point
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                        })
+                )
                 .cors(cors -> cors
                         .configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
