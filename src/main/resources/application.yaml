@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: mediatron
@@ -43,3 +44,5 @@ app:
     tmdb-images-url: https://image.tmdb.org/t/p/original
   lang:
     default: ru
+server:
+  address: 0.0.0.0
