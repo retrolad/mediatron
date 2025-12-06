@@ -14,7 +14,7 @@ public record MovieDto(
         String ratingMpaa,
         Long budget,
         Short ageRating,
-        List<String> genres,
+        List<GenreDto> genres,
         List<String> countries,
         Map<String, Float> ratings,
         Map<String, Integer> votes,

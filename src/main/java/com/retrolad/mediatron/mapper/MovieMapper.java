@@ -21,6 +21,7 @@ public class MovieMapper {
     private final ImageMapper imageMapper;
     private final MoviePersonMapper moviePersonMapper;
     private final SourceMapper sourceMapper;
+    private final GenreMapper genreMapper;
 
     public MovieCardDto toMovieCardDto(Movie movie, String lang, ImageSize posterSize) {
         Map<String, Float> ratings = sourceMapper.toDto(movie.getRatings());
@@ -68,7 +69,7 @@ public class MovieMapper {
                 movie.getBudget(),
                 movie.getAgeRating(),
                 movie.getGenres().stream()
-                        .map(g -> g.getTranslations().get(lang))
+                        .map(g -> genreMapper.toDto(g, lang))
                         .toList(),
                 movie.getProductionCountries().stream()
                         .map(c -> c.getTranslations().get(lang))
