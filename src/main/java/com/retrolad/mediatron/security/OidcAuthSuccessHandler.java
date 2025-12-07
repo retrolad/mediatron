@@ -1,7 +1,5 @@
 package com.retrolad.mediatron.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.retrolad.mediatron.service.AuthUserDetailsService;
 import com.retrolad.mediatron.service.JwtService;
 import jakarta.servlet.ServletException;
@@ -22,7 +20,6 @@ public class OidcAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
 
     private final AuthUserDetailsService userDetailsService;
     private final JwtService jwtService;
-    private final ObjectMapper objectMapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -31,9 +28,6 @@ public class OidcAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         String token = jwtService.generateToken(userDetails);
-        ObjectNode tokenJson = objectMapper.createObjectNode();
-        tokenJson.put("token", token);
-
-        response.getWriter().write(tokenJson.toString());
+        response.sendRedirect("http://localhost:5173/oauth-success?accessToken=" + token);
     }
 }

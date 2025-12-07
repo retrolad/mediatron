@@ -25,11 +25,11 @@ public class AuthService {
      */
     public JwtAuthResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
+                request.getEmail(),
                 request.getPassword()
         ));
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
         String token = jwtService.generateToken(userDetails);
         return new JwtAuthResponse(token);
