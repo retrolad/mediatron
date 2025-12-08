@@ -1,5 +1,6 @@
 package com.retrolad.mediatron.security.filter;
 
+import com.retrolad.mediatron.security.AuthUserDetails;
 import com.retrolad.mediatron.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -46,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = jwtService.extractClaim(token, Claims::getSubject);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            AuthUserDetails userDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(username);
 
             // Если токен валидный, создаем контекст с аутентифицированным пользователем.
             // Только для текущего запроса.

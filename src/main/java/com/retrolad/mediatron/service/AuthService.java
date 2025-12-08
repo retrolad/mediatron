@@ -2,6 +2,7 @@ package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.JwtAuthResponse;
 import com.retrolad.mediatron.dto.SignInRequest;
+import com.retrolad.mediatron.security.AuthUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class AuthService {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken((AuthUserDetails) userDetails);
         return new JwtAuthResponse(token);
     }
 }

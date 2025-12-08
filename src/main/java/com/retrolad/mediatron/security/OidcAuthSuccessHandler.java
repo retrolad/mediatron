@@ -27,7 +27,7 @@ public class OidcAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
         String email = principal.getEmail();
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken((AuthUserDetails) userDetails);
         response.sendRedirect("http://localhost:5173/oauth-success?accessToken=" + token);
     }
 }

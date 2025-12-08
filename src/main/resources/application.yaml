@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: mediatron
@@ -12,7 +11,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-#        generate_statistics: true
+        generate_statistics: true
         format_sql: true
   security:
     oauth2:
@@ -31,14 +30,16 @@ logging:
     org.springframework.security: TRACE
 
     # Уровень DEBUG покажет параметры, подставляемые вместо '?'
-#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-#    org.hibernate.stat: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.stat: debug
 
     # Также полезно для общего дебага Hibernate
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
 
 app:
+  jwt:
+    secret: app.jwt.secret=ZGhpYXNkZmdoamtsMTIzNDU2Nzg5MHF3ZXJ0eXVpb3Bhc2RmZ2g=
   images:
     base-dir: images
     tmdb-images-url: https://image.tmdb.org/t/p/original

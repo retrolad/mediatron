@@ -4,11 +4,15 @@ import com.retrolad.mediatron.security.AuthUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "user_profile")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Builder
 public class User {
 
@@ -22,4 +26,9 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    @Builder.Default
+    private Set<UserMovieRelation> movieRelations = new HashSet<>();
 }

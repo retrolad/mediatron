@@ -1,6 +1,7 @@
 package com.retrolad.mediatron.model.movie;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.retrolad.mediatron.model.user.UserMovieRelation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -62,6 +63,7 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "langCode")
+    @Builder.Default
     private Map<String, MovieTranslation> translations = new HashMap<>();
 
     @ManyToMany
@@ -71,6 +73,7 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     @JsonManagedReference
+    @Builder.Default
     private Set<Genre> genres = new HashSet<>();
 
     @ManyToMany
@@ -79,22 +82,32 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id")
     )
+    @Builder.Default
     private Set<ProductionCountry> productionCountries = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<MovieRating> ratings = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<MovieVotes> votes = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<MovieExternalId> externalIds = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<MovieImage> images = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<MoviePerson> persons = new HashSet<>();
+
+    @OneToMany(mappedBy = "movie")
+    @Builder.Default
+    private Set<UserMovieRelation> userRelations = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
