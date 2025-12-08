@@ -6,49 +6,41 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-
-@Controller
-@RequestMapping
+@RestController
 @AllArgsConstructor
+@RequestMapping("/api/movies")
 public class MovieController {
 
     private MovieService movieService;
 
-    @GetMapping
-    public String getIndex(Model model, @PageableDefault(size = 5, sort = "year", direction = Sort.Direction.DESC)
-            Pageable heroPageable, @RequestParam(required = false) String lang) {
-
-        model.addAttribute("movieHero", movieService.getMovieHero(heroPageable, lang));
-        return "index";
+    // TODO Избавиться от передачи локалей в каждом методе контроллеров и сервисов
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getById(id, lang, ImageSize.FULL));
     }
 
-    @GetMapping("/carousel")
-    public String getMoviesPage(Model model, @RequestParam(required = false) String lang) {
-        model.addAttribute("years", movieService.getAllYears()
-                .stream().sorted(Comparator.reverseOrder()));
-        model.addAttribute("lang", lang);
-        return "carousel";
+    @GetMapping("/cards")
+    public ResponseEntity<?> getCards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                      @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getMovieCards(pageable, lang));
     }
 
-    @GetMapping("/movies-list")
-    public String getMoviesByYearPage(@RequestParam(name = "year") Integer year, @RequestParam(required = false) String lang, Model model) {
-        model.addAttribute("movies", movieService.getByYear(year, ImageSize.FULL, lang));
-        model.addAttribute("year", year);
-        model.addAttribute("lang", lang);
-        return "movies";
+    @GetMapping("/hero")
+    public ResponseEntity<?> getHero(@PageableDefault(size = 5, sort = "year", direction = Sort.Direction.DESC)
+                                     Pageable pageable, @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getMovieHero(pageable, lang));
     }
 
-    @GetMapping("/movie/{id}")
-    public String getMovieProfilePage(@PathVariable Long id, Model model, @RequestParam(required = false) String lang) {
-        model.addAttribute("movie", movieService.getById(id, lang, ImageSize.FULL));
-        return "movie-page";
+    @GetMapping("/years")
+    public ResponseEntity<?> getYears() {
+        return ResponseEntity.ok(movieService.getAllYears());
+    }
+
+    @GetMapping("/years/{year}")
+    public ResponseEntity<?> getByYear(@PathVariable Integer year, @RequestParam(required = false) String lang) {
+        return ResponseEntity.ok(movieService.getByYear(year, ImageSize.FULL, lang));
     }
 }
