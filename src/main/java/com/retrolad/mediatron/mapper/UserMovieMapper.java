@@ -20,7 +20,7 @@ public class UserMovieMapper {
                 movie.getTranslations().get(lang).getTitle(),
                 imageMapper.toDto(movie.getImages(), lang, ImageSize.FULL).posterPath(),
                 movie.getYear(),
-                userMovie.getIsRated() ? userMovie.getRating() : null
+                userMovie.getIsRated() != null ? userMovie.getRating() : null
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.retrolad.mediatron.repository;
 
+import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.model.user.User;
 import com.retrolad.mediatron.model.user.UserMovieRelation;
 import com.retrolad.mediatron.model.user.UserMovieRelationId;
@@ -13,5 +14,4 @@ import java.util.List;
 @Repository
 public interface UserMovieRepository extends JpaRepository<UserMovieRelation, UserMovieRelationId>,
         JpaSpecificationExecutor<UserMovieRelation> {
-
 }

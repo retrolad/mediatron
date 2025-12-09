@@ -1,5 +1,8 @@
 package com.retrolad.mediatron.service;
 
+import com.retrolad.mediatron.dto.MovieTitleQueryDto;
+import com.retrolad.mediatron.model.movie.MovieTranslation;
+import com.retrolad.mediatron.repository.MovieTranslationRepository;
 import com.retrolad.mediatron.utils.AppUtils;
 import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.dto.MovieCardDto;
@@ -11,7 +14,6 @@ import com.retrolad.mediatron.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+    private final MovieTranslationRepository translationRepository;
     private final MovieMapper movieMapper;
     private final AppUtils appUtils;
 
@@ -34,7 +37,12 @@ public class MovieService {
                 .toList();
     }
 
-    public MovieDto getById(Long id, String lang, ImageSize size) {
+    public Movie getById(Long id) {
+        return movieRepository.findById(id)
+                .orElseThrow();
+    }
+
+    public MovieDto getFullDtoById(Long id, String lang, ImageSize size) {
         String l = appUtils.getLangOrDefault(lang);
         return movieRepository.findByIdWithTranslation(id, l)
                 .map(m -> movieMapper.toDto(m, l, size)).orElseThrow();
@@ -57,6 +65,14 @@ public class MovieService {
 
         return movies.stream()
                 .map(m -> movieMapper.toMovieHeroDto(m, l, ImageSize.FULL))
+                .toList();
+    }
+
+    public List<MovieTitleQueryDto> getTitlesByQuery(String query) {
+        List<MovieTranslation> result = translationRepository.findAllByTitle(
+                query, "ru");
+        return result.stream()
+                .map(t -> new MovieTitleQueryDto(t.getMovie().getId(), t.getTitle()))
                 .toList();
     }
 }
