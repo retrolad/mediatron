@@ -48,6 +48,13 @@ public class MovieService {
                 .map(m -> movieMapper.toDto(m, l, size)).orElseThrow();
     }
 
+    public MovieCardDto getCardById(Long id, String lang) {
+        String l = appUtils.getLangOrDefault(lang);
+        return movieRepository.findByIdWithTranslation(id, l)
+                .map(m -> movieMapper.toMovieCardDto(m, l, ImageSize.FULL))
+                .orElseThrow();
+    }
+
     public List<MovieCardDto> getMovieCards(Pageable pageable, String lang) {
         String l = appUtils.getLangOrDefault(lang);
         return movieRepository.findMovieCards(l, pageable)
@@ -70,7 +77,7 @@ public class MovieService {
 
     public List<MovieTitleQueryDto> getTitlesByQuery(String query) {
         List<MovieTranslation> result = translationRepository.findAllByTitle(
-                query, "ru");
+                query, "ru", Pageable.ofSize(10));
         return result.stream()
                 .map(t -> new MovieTitleQueryDto(t.getMovie().getId(), t.getTitle()))
                 .toList();

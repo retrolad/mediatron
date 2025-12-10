@@ -2,6 +2,7 @@ package com.retrolad.mediatron.repository;
 
 import com.retrolad.mediatron.model.movie.MovieTranslation;
 import com.retrolad.mediatron.model.movie.MovieTranslationId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,5 @@ public interface MovieTranslationRepository extends JpaRepository<MovieTranslati
     WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))
     AND (t.langCode = :userLang OR t.langCode = 'en')
     """)
-    List<MovieTranslation> findAllByTitle(String title, String userLang);
+    List<MovieTranslation> findAllByTitle(String title, String userLang, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.retrolad.mediatron.controller;
 
+import com.retrolad.mediatron.dto.MovieCardDto;
 import com.retrolad.mediatron.dto.MovieTitleQueryDto;
 import com.retrolad.mediatron.utils.images.ImageSize;
 import com.retrolad.mediatron.service.MovieService;
@@ -23,6 +24,11 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovie(@PathVariable Long id, @RequestParam(required = false) String lang) {
         return ResponseEntity.ok(movieService.getFullDtoById(id, lang, ImageSize.FULL));
+    }
+
+    @GetMapping("/cards/{id}")
+    public MovieCardDto getCard(@PathVariable Long id, @RequestParam(required = false) String lang) {
+        return movieService.getCardById(id, lang);
     }
 
     @GetMapping("/cards")
@@ -49,7 +55,7 @@ public class MovieController {
 
     @GetMapping("/titles")
     public List<MovieTitleQueryDto> getTitlesByQuery(@RequestParam String query) {
-        if (query.length() < 3) return List.of();
+        if (query.length() < 2) return List.of();
         return movieService.getTitlesByQuery(query);
     }
 
