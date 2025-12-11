@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,23 +18,27 @@ public class CustomOidcUserService extends OidcUserService {
 
     private final AuthUserRepository userRepository;
     private final AuthRoleRepository roleRepository;
+    private final UserService userService;
 
     @Override
+    @Transactional
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
         String email = oidcUser.getEmail();
 
-        AuthUser user = userRepository.findByEmail(email).orElse(null);
+        AuthUser authUser = userRepository.findByEmail(email).orElse(null);
 
-        // Регистрируем пользователя
-        if (user == null) {
+        // Регистрируем пользователя, если его не существует
+        if (authUser == null) {
             AuthRole role = roleRepository.findByName("ROLE_USER").orElseThrow();
-            user = AuthUser.builder()
+            authUser = AuthUser.builder()
                     .email(email)
                     .isActive(true)
                     .build();
-            user.getRoles().add(role);
-            userRepository.save(user);
+            authUser.getRoles().add(role);
+
+            // Создаем профиль
+            userService.createUserProfile(authUser);
         }
 
         return oidcUser;
