@@ -26,6 +26,8 @@ public class AuthUser {
 
     private boolean isActive;
 
+    private Long telegramId;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "auth_user_role",
                 joinColumns = @JoinColumn(name = "user_id"),

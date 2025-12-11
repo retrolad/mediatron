@@ -2,9 +2,14 @@ package com.retrolad.mediatron.controller;
 
 import com.retrolad.mediatron.dto.JwtAuthResponse;
 import com.retrolad.mediatron.dto.SignInRequest;
+import com.retrolad.mediatron.security.TrustedClientsProperties;
 import com.retrolad.mediatron.service.AuthService;
+import com.retrolad.mediatron.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -12,9 +17,16 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
 
     @PostMapping("/sign-in")
     public JwtAuthResponse signIn(@RequestBody SignInRequest request) {
         return authService.signIn(request);
+    }
+
+    @PostMapping("/get-token")
+    public JwtAuthResponse signIn(@RequestBody TrustedClientsProperties.ClientConfig client) {
+        String token = jwtService.generateClientToken(client);
+        return new JwtAuthResponse(token);
     }
 }

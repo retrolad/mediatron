@@ -1,9 +1,13 @@
 package com.retrolad.mediatron.service;
 
+import com.retrolad.mediatron.exception.ClientNotValidException;
 import com.retrolad.mediatron.security.AuthUserDetails;
+import com.retrolad.mediatron.security.ClientValidationService;
+import com.retrolad.mediatron.security.TrustedClientsProperties.ClientConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -11,10 +15,14 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+
+    private final ClientValidationService clientValidationService;
 
     @Value("${jwt.secret.key}")
     private String jwtSecretKey;
@@ -27,12 +35,35 @@ public class JwtService {
     public String generateToken(AuthUserDetails userDetails) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
-                .claim("authorities", userDetails.getAuthorities())
                 .issuedAt(new Date())
                 .expiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-                .claims().add("userId", userDetails.getAuthUser().getId())
-                    .and()
+                .claims()
+                    .add("authorities", userDetails.getAuthorities())
+                    .add("userId", userDetails.getAuthUser().getId())
+                    .add("type", "user")
+                .and()
                 .signWith(getSignedKey())
+                .compact();
+    }
+
+    /**
+     * Генерирует токен для клиентского приложения
+     * @param client данные клиента
+     * @return токен
+     */
+    public String generateClientToken(ClientConfig client) {
+        if (!clientValidationService.isClientValid(client)) {
+            throw new ClientNotValidException("Клиент не является валидным");
+        }
+
+        return Jwts.builder()
+                .subject(client.getClientId())
+                .issuedAt(new Date())
+                .expiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+                .signWith(getSignedKey())
+                .claims()
+                    .add("type", "client")
+                .and()
                 .compact();
     }
 

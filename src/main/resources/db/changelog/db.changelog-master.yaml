@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/changeset-011-alter-user-password-nullable.sql
   - include:
       file: db/changelog/changeset-012-add-user-movie-relation-schema.sql
+  - include:
+      file: db/changelog/changeset-013-alter-auth-user-add-telegramid.sql

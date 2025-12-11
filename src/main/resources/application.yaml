@@ -43,5 +43,13 @@ app:
     tmdb-images-url: https://image.tmdb.org/t/p/original
   lang:
     default: ru
+
+trusted-clients:
+  clients:
+    telegram-bot:
+      client_id: telegram-bot
+      client_secret: ${TELEGRAM_CLIENT_SECRET}
+      client_authority: CLIENT
+
 server:
   address: 0.0.0.0
