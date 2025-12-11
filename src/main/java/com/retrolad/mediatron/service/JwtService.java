@@ -4,7 +4,6 @@ import com.retrolad.mediatron.security.AuthUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,11 +14,10 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-@RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+    @Value("${jwt.secret.key}")
+    private String jwtSecretKey;
 
     /**
      * Генерирует токен на основе данных пользователя
@@ -70,6 +68,6 @@ public class JwtService {
     }
 
     private SecretKey getSignedKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        return Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
     }
 }

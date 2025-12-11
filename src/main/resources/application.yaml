@@ -18,13 +18,13 @@ spring:
       client:
         registration:
           google:
-            client-id: 1095820494475-49tddgkumsfitjj2b69ab1cd9vu9ipb6.apps.googleusercontent.com
-            client-secret: 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
-
+            client-id: ${OAUTH2_GOOGLE_CLIENT}
+            client-secret: ${OAUTH2_GOOGLE_SECRET}
   thymeleaf:
     cache: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
 logging:
   level:
     org.springframework.security: TRACE
@@ -38,8 +38,6 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
 
 app:
-  jwt:
-    secret: app.jwt.secret=ZGhpYXNkZmdoamtsMTIzNDU2Nzg5MHF3ZXJ0eXVpb3Bhc2RmZ2g=
   images:
     base-dir: images
     tmdb-images-url: https://image.tmdb.org/t/p/original

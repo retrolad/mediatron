@@ -37,3 +37,4 @@ build/
 /src/main/resources/static/images/
 /data-collector/
 /db
+*.env
