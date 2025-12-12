@@ -2,9 +2,9 @@ package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.JwtAuthResponse;
 import com.retrolad.mediatron.dto.SignInRequest;
+import com.retrolad.mediatron.repository.AuthUserRepository;
+import com.retrolad.mediatron.security.AuthUser;
 import com.retrolad.mediatron.security.AuthUserDetails;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +18,7 @@ public class AuthService {
     private final AuthUserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AuthUserRepository authUserRepository;
 
     /**
      * Аутентификация пользователя
@@ -34,5 +35,9 @@ public class AuthService {
 
         String token = jwtService.generateToken((AuthUserDetails) userDetails);
         return new JwtAuthResponse(token);
+    }
+
+    public AuthUser getByTelegramId(Long telegramId) {
+        return authUserRepository.findByTelegramId(telegramId).orElse(null);
     }
 }

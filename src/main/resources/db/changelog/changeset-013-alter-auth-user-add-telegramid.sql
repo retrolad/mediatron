@@ -7,4 +7,4 @@ drop not null;
 
 --changeset retrolad:2
 alter table auth_user
-add column telegram_id bigserial unique;
+add column telegram_id bigint unique;

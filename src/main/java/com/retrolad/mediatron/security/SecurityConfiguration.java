@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -37,10 +38,11 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/**", "/register", "/css/**", "/images/**").permitAll()
-//                        .requestMatchers("/admin/**", "/api/**").hasRole("ADMIN")
-                        .requestMatchers("/api/profile").authenticated()
+                        .requestMatchers("/auth/client/get-token").permitAll()
+                        .requestMatchers("/auth/client/**").hasAuthority("ROLE_CLIENT")
                         .requestMatchers("/oauth2/authorization/**").permitAll()
-                        .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authSuccessHandler))
