@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/**", "/register", "/css/**", "/images/**").permitAll()
                         .requestMatchers("/auth/client/get-token").permitAll()
-                        .requestMatchers("/auth/client/**").hasAuthority("ROLE_CLIENT")
+                        .requestMatchers("/auth/client/**", "/api/client/**").hasAuthority("ROLE_CLIENT")
                         .requestMatchers("/oauth2/authorization/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
                         .anyRequest().authenticated())

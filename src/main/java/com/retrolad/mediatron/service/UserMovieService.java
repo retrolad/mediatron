@@ -1,7 +1,9 @@
 package com.retrolad.mediatron.service;
 
+import com.retrolad.mediatron.dto.MovieTitleQueryDto;
 import com.retrolad.mediatron.dto.UserMovieDto;
 import com.retrolad.mediatron.dto.UserMovieRequest;
+import com.retrolad.mediatron.mapper.MovieMapper;
 import com.retrolad.mediatron.mapper.UserMovieMapper;
 import com.retrolad.mediatron.model.movie.Movie;
 import com.retrolad.mediatron.model.user.User;
@@ -55,6 +57,13 @@ public class UserMovieService {
 
         return relations.stream()
                 .map(m -> userMovieMapper.toDto(m, request.lang()))
+                .toList();
+    }
+
+    public List<UserMovieDto> getUserWatchlist(Long userId, String lang) {
+        userService.getUserById(userId);
+        return userMovieRepository.findByUserIdAndIsInWatchlist(userId, true).stream()
+                .map(umr -> userMovieMapper.toDto(umr, lang))
                 .toList();
     }
 

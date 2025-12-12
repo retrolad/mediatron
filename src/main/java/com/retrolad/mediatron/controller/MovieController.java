@@ -58,9 +58,4 @@ public class MovieController {
         if (query.length() < 2) return List.of();
         return movieService.getTitlesByQuery(query);
     }
-
-    @GetMapping("/search")
-    public List<String> getByQuery(@RequestParam String query, Pageable pageable) {
-        return List.of("Blade Runner");
-    }
 }

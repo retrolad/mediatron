@@ -27,7 +27,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private Set<UserMovieRelation> movieRelations = new HashSet<>();
