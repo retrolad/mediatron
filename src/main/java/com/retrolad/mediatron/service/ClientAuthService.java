@@ -1,6 +1,6 @@
 package com.retrolad.mediatron.service;
 
-import com.retrolad.mediatron.dto.TelegramClientSignInRequest;
+import com.retrolad.mediatron.dto.telegram.TelegramClientSignInRequest;
 import com.retrolad.mediatron.dto.UserProfileDto;
 import com.retrolad.mediatron.mapper.UserProfileMapper;
 import com.retrolad.mediatron.model.user.User;

@@ -25,3 +25,5 @@ databaseChangeLog:
       file: db/changelog/changeset-012-add-user-movie-relation-schema.sql
   - include:
       file: db/changelog/changeset-013-alter-auth-user-add-telegramid.sql
+  - include:
+      file: db/changelog/changeset-014-fix-movieid-in-translation.sql

@@ -76,10 +76,12 @@ public class MovieService {
     }
 
     public List<MovieTitleQueryDto> getTitlesByQuery(String query) {
-        List<MovieTranslation> result = translationRepository.findAllByTitle(
+        List<MovieTranslation> translations = translationRepository.findAllByTitle(
                 query, "ru", Pageable.ofSize(10));
-        return result.stream()
-                .map(t -> new MovieTitleQueryDto(t.getMovie().getId(), t.getTitle()))
+
+        return translations.stream()
+                .map(t ->
+                        new MovieTitleQueryDto(t.getMovie().getId(), t.getTitle(), t.getMovie().getYear()))
                 .toList();
     }
 }

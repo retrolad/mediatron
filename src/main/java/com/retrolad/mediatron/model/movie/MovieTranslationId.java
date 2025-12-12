@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class MovieTranslationId implements Serializable {
 
     @Column(name = "movie_id")
-    private int movieId;
+    private Long movieId;
 
     @Column(name = "lang_code", length = 2)
     private String langCode;

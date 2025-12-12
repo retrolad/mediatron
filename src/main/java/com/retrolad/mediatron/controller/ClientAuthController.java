@@ -1,7 +1,7 @@
 package com.retrolad.mediatron.controller;
 
 import com.retrolad.mediatron.dto.JwtAuthResponse;
-import com.retrolad.mediatron.dto.TelegramClientSignInRequest;
+import com.retrolad.mediatron.dto.telegram.TelegramClientSignInRequest;
 import com.retrolad.mediatron.dto.UserProfileDto;
 import com.retrolad.mediatron.security.TrustedClientsProperties;
 import com.retrolad.mediatron.service.ClientAuthService;

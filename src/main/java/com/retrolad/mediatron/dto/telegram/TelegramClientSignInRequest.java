@@ -1,4 +1,4 @@
-package com.retrolad.mediatron.dto;
+package com.retrolad.mediatron.dto.telegram;
 
 public record TelegramClientSignInRequest(
         Long telegramId,

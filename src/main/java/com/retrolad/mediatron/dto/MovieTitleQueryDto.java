@@ -2,5 +2,6 @@ package com.retrolad.mediatron.dto;
 
 public record MovieTitleQueryDto (
         Long movieId,
-        String title
+        String title,
+        int year
 ) { }
