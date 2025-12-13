@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: mediatron-telegram-bot
+  main:
+    web-application-type: none
+bot:
+  name: mediatron_bot
+  token: ${TELEGRAM_API_TOKEN}
+mediatron:
+  url: http://localhost:8080
+  api: http://localhost:8080/api
+logging:
+  level:
+    web: DEBUG
