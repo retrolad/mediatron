@@ -38,6 +38,7 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/**", "/register", "/css/**", "/images/**").permitAll()
+                        .requestMatchers("/auth/sign-in").permitAll()
                         .requestMatchers("/auth/client/get-token").permitAll()
                         .requestMatchers("/auth/client/**", "/api/client/**").hasAuthority("ROLE_CLIENT")
                         .requestMatchers("/oauth2/authorization/**").permitAll()
