@@ -24,7 +24,9 @@ public class ImageMapper {
         for (var image : images) {
             ImageType type = ImageType.valueOf(image.getType().getName().toUpperCase());
 
-            String url = urlBuilder.buildImageUrl(image, lang, posterSize);
+            // Пока используем чужое облако с изображениями
+//            String url = urlBuilder.buildImageUrl(image, lang, posterSize);
+            String url = image.getUrl();
 
             switch (type) {
                 case POSTER -> {
