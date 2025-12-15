@@ -20,10 +20,12 @@ spring:
           google:
             client-id: ${OAUTH2_GOOGLE_CLIENT}
             client-secret: ${OAUTH2_GOOGLE_SECRET}
-  thymeleaf:
-    cache: false
+  profiles:
+    active: test
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+    parameters:
+      duplicate-file-mode: WARN
 
 logging:
   level:
