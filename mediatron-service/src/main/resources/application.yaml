@@ -3,9 +3,9 @@ spring:
     name: mediatron
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mediatron
-    username: mt_user
-    password: secret
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/mediatron
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
   jpa:
     hibernate:
       ddl-auto: validate

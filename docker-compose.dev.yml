@@ -1,0 +1,35 @@
+services:
+  mediatron-service:
+    image: retrolad7/mediatron-service:1.0
+    restart: always
+    environment:
+      DB_HOST: db
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      OAUTH2_GOOGLE_CLIENT: ${OAUTH2_GOOGLE_CLIENT}
+      OAUTH2_GOOGLE_SECRET: ${OAUTH2_GOOGLE_SECRET}
+    ports:
+     - "8080:8080"
+    networks:
+      - mediatron-net
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mediatron
+    ports:
+      - "5432:5432"
+    networks:
+      - mediatron-net
+    volumes:
+      - mediatron_postgres_data-cloned:/var/lib/postgresql/data
+
+networks:
+  mediatron-net:
+
+volumes:
+  mediatron_postgres_data-cloned:
+    external: true
+
+
