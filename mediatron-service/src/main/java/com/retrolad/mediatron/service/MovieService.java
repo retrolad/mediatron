@@ -1,6 +1,7 @@
 package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.MovieTitleQueryDto;
+import com.retrolad.mediatron.exception.MovieNotFoundException;
 import com.retrolad.mediatron.model.movie.MovieTranslation;
 import com.retrolad.mediatron.repository.MovieTranslationRepository;
 import com.retrolad.mediatron.utils.AppUtils;
@@ -39,20 +40,21 @@ public class MovieService {
 
     public Movie getById(Long id) {
         return movieRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new MovieNotFoundException(id));
     }
 
     public MovieDto getFullDtoById(Long id, String lang, ImageSize size) {
         String l = appUtils.getLangOrDefault(lang);
         return movieRepository.findByIdWithTranslation(id, l)
-                .map(m -> movieMapper.toDto(m, l, size)).orElseThrow();
+                .map(m -> movieMapper.toDto(m, l, size))
+                .orElseThrow(() -> new MovieNotFoundException(id));
     }
 
     public MovieCardDto getCardById(Long id, String lang) {
         String l = appUtils.getLangOrDefault(lang);
         return movieRepository.findByIdWithTranslation(id, l)
                 .map(m -> movieMapper.toMovieCardDto(m, l, ImageSize.FULL))
-                .orElseThrow();
+                .orElseThrow(() -> new MovieNotFoundException(id));
     }
 
     public List<MovieCardDto> getMovieCards(Pageable pageable, String lang) {

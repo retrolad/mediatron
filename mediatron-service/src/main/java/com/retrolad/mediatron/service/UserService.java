@@ -1,6 +1,7 @@
 package com.retrolad.mediatron.service;
 
 import com.retrolad.mediatron.dto.UserProfileDto;
+import com.retrolad.mediatron.exception.UserNotFoundException;
 import com.retrolad.mediatron.exception.UserProfileNotFoundException;
 import com.retrolad.mediatron.mapper.UserProfileMapper;
 import com.retrolad.mediatron.model.user.User;
@@ -23,12 +24,12 @@ public class UserService {
     public UserProfileDto getUserProfile(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() -> new UserProfileNotFoundException(id));
     }
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Transactional
@@ -51,10 +52,13 @@ public class UserService {
 
     public UserProfileDto getUserByTelegramId(Long telegramId) {
         AuthUser authUser = authService.getByTelegramId(telegramId);
-        if (authUser == null) return null;
+        if (authUser == null) {
+            throw new UserNotFoundException("Пользователь с telegram id " + telegramId + " не найден");
+        };
 
-        return userRepository.findById(authUser.getId())
+        Long userId = authUser.getId();
+        return userRepository.findById(userId)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new UserProfileNotFoundException("У пользователя нет профиля: " + authUser.getId()));
+                .orElseThrow(() -> new UserProfileNotFoundException(userId));
     }
 }
