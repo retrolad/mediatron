@@ -1,0 +1,9 @@
+logging:
+  level:
+    # Уровень DEBUG покажет параметры, подставляемые вместо '?'
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.stat: debug
+
+    # Также полезно для общего дебага Hibernate
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate

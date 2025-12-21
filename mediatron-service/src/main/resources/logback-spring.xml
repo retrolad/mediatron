@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Включаем стандартные настройки Spring Boot (цвета, формат консоли) -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <springProfile name="!dev">
+        <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            !-- Адрес и порт, где Logstash слушает входящие данные -->
+            <destination>194.87.237.197:50000</destination>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp/>
+                    <context />
+                    <loggerName/>
+                    <logLevel/>
+                    <pattern>
+                        <pattern>
+                            {"service":"mediatron-backend", "message":"%message"}
+                        </pattern>
+                    </pattern>
+                    <threadName/>
+                    <mdc/>
+                </providers>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="logstash"/>
+        </root>
+    </springProfile>
+</configuration>

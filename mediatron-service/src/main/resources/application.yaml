@@ -21,7 +21,7 @@ spring:
             client-id: ${OAUTH2_GOOGLE_CLIENT}
             client-secret: ${OAUTH2_GOOGLE_SECRET}
   profiles:
-    active: test
+    active: ${SPRING_APPLICATION_PROFILE:dev}
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     parameters:
@@ -29,15 +29,11 @@ spring:
 
 logging:
   level:
-    org.springframework.security: TRACE
+    org.springframework.boot.web.servlet: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
 
-    # Уровень DEBUG покажет параметры, подставляемые вместо '?'
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.stat: debug
-
-    # Также полезно для общего дебага Hibernate
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
+    root: info
 
 app:
   front:
