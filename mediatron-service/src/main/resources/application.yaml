@@ -40,11 +40,17 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
 
 app:
+  front:
+    url: ${FRONTEND_URL:http://localhost:5173}
   images:
     base-dir: images
     tmdb-images-url: https://image.tmdb.org/t/p/original
   lang:
     default: ru
+
+server:
+  # Включает поддержку заголовков X-Forwarded-*
+  forward-headers-strategy: framework
 
 trusted-clients:
   clients:
@@ -52,6 +58,3 @@ trusted-clients:
       client_id: telegram-bot
       client_secret: ${TELEGRAM_CLIENT_SECRET}
       client_authority: CLIENT
-
-server:
-  address: 0.0.0.0

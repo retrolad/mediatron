@@ -1,16 +1,43 @@
-version: '3.8'
 services:
-  db:
-    image: postgres:15
-    container_name: mediatron_db
+  backend:
+    image: retrolad7/mediatron-service:latest
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      OAUTH2_GOOGLE_CLIENT: ${OAUTH2_GOOGLE_CLIENT}
+      OAUTH2_GOOGLE_SECRET: ${OAUTH2_GOOGLE_SECRET}
+      FRONTEND_URL: http://localhost:8081
+#      SERVER_FORWARD_HEADERS_STRATEGY: framework
+    ports:
+     - "8080"
+    networks:
+      - mediatron-net
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: mediatron
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    networks:
+      - mediatron-net
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mediatron-vol:/var/lib/postgresql/data
+  front:
+    image: retrolad7/mediatron-front:latest
+    restart: always
+    ports:
+      - "8081:80"
+    networks:
+      - mediatron-net
+
+networks:
+  mediatron-net:
+
 volumes:
-  postgres_data:
+  mediatron-vol:
