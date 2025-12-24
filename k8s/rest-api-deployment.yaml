@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-api-deploy
+  labels:
+    app: rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-api # Match pods with this label
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    # Pod config
+    metadata:
+      labels:
+        app: rest-api # Label that all pods get assigned
+    spec:
+      containers:
+        - name: rest-api
+          image: retrolad7/mediatron-service:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: rest-api-secret
+          ports:
+            - protocol: TCP
+              containerPort: 8080
