@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-deploy
+  labels:
+    app: bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: retrolad7/mediatron-bot:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bot-config
+            - secretRef:
+                name: bot-secret
+          ports:
+            - containerPort: 8080
+              name: http

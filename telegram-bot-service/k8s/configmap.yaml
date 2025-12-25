@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bot-config
+data:
+  BACKEND_HOST: "rest-api"
+  BACKEND_PORT: "8080"

@@ -38,4 +38,4 @@ build/
 /db
 *.env
 .secrets
-/k8s/*secret*
+**/k8s/*secret*
