@@ -7,8 +7,7 @@ bot:
   name: mediatron_bot
   token: ${TELEGRAM_API_TOKEN}
 mediatron:
-  url: http://localhost:8080
-  api: http://localhost:8080/api
+  url: http://${BACKEND_HOST:-localhost}:${BACKEND_PORT:-8080}
 logging:
   level:
     web: DEBUG

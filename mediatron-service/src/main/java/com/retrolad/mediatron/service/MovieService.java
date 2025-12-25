@@ -83,7 +83,7 @@ public class MovieService {
 
         return translations.stream()
                 .map(t ->
-                        new MovieTitleQueryDto(t.getMovie().getId(), t.getTitle(), t.getMovie().getYear()))
+                        new MovieTitleQueryDto(t.getId().getMovieId(), t.getTitle(), t.getMovie().getYear()))
                 .toList();
     }
 }

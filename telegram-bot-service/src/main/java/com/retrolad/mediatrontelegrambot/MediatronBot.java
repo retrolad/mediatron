@@ -133,7 +133,7 @@ public class MediatronBot implements LongPollingSingleThreadUpdateConsumer {
                 messageText.replace("/search ", ""));
         List<InlineKeyboardButton> buttons = foundMovies.stream()
                 .map(m -> TelegramApiUtils.createButton(
-                        String.format("%s (%d)",m.title(), m.year()), "/movie " + m.movieId()))
+                        String.format("%s (%d)",m.title(), m.year()), "/movie " + m.id()))
                 .toList();
 
         SendMessage message = SendMessage.builder()

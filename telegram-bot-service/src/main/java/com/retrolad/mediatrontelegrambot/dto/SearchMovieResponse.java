@@ -1,4 +1,4 @@
 package com.retrolad.mediatrontelegrambot.dto;
 
-public record SearchMovieResponse(Long movieId, String title, int year) {
+public record SearchMovieResponse(Long id, String title, int year) {
 }
