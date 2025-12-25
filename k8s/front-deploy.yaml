@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy
+  labels:
+    app: frontend
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: retrolad7/mediatron-front:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: rest-api-secret
+          ports:
+            - protocol: TCP
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/templates
+              name: template-vol
+      volumes:
+        - name: template-vol
+          configMap:
+            name: nginx-template

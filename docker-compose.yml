@@ -10,7 +10,7 @@ services:
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       OAUTH2_GOOGLE_CLIENT: ${OAUTH2_GOOGLE_CLIENT}
       OAUTH2_GOOGLE_SECRET: ${OAUTH2_GOOGLE_SECRET}
-      FRONTEND_URL: ${FRONTEND_URL}:${FRONTEND_PORT}
+      FRONTEND_URL: ${FRONTEND_HOST}:${FRONTEND_PORT}
       SPRING_APPLICATION_PROFILE: ${SPRING_APPLICATION_PROFILE}
 #      SERVER_FORWARD_HEADERS_STRATEGY: framework
     networks:
@@ -32,10 +32,16 @@ services:
     image: retrolad7/mediatron-front:${IMAGE_TAG:-latest}
     container_name: mediatron-front
     restart: always
+    environment:
+      BACKEND_HOST: ${BACKEND_HOST:-localhost}
+      BACKEND_PORT: ${BACKEND_PORT:-8080}
+      FRONTEND_PORT: ${FRONTEND_PORT:-80}
     ports:
       - "${FRONTEND_PORT:-80}:80"
     networks:
       - mediatron-net
+    volumes:
+      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
 
 networks:
   mediatron-net:
