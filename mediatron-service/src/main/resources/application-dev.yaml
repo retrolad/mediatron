@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: false
+        format_sql: true
+logging:
+  level:
+    # Уровень DEBUG покажет параметры, подставляемые вместо '?'
+    # org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    # org.hibernate.stat: debug
+
+    # Также полезно для общего дебага Hibernate
+    org.hibernate.SQL: DEBUG
+    # org.hibernate.orm.jdbc.bind: TRACE # Для новых версий Hibernate
+    com.retrolad.mediatron: debug
+app:
+  logging:
+    path: ./logs

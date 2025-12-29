@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -74,9 +75,10 @@ public class MediatronApiService {
 
     private <T> RestClient.RequestHeadersSpec.ExchangeFunction<T> handleResponse(Class<T> clazz) {
         return (req, resp) -> {
-            if (resp.getStatusCode() == HttpStatus.CONFLICT)
+            HttpStatusCode statusCode = resp.getStatusCode();
+            if (statusCode == HttpStatus.CONFLICT || statusCode == HttpStatus.NOT_FOUND)
                 return null;
-            else if (resp.getStatusCode() == HttpStatus.OK)
+            else if (statusCode == HttpStatus.OK)
                 return resp.bodyTo(clazz);
             else
                 throw new RuntimeException("Неизвестная ошибка");

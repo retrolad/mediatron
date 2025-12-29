@@ -6,13 +6,17 @@ import com.retrolad.mediatron.repository.AuthUserRepository;
 import com.retrolad.mediatron.security.AuthUser;
 import com.retrolad.mediatron.security.AuthUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final AuthUserDetailsService userDetailsService;
@@ -34,6 +38,9 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
         String token = jwtService.generateToken((AuthUserDetails) userDetails);
+
+        log.info("Вход пользователя",
+                kv("userId", ((AuthUserDetails) userDetails).getAuthUser().getId()));
         return new JwtAuthResponse(token);
     }
 

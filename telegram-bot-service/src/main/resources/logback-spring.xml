@@ -2,7 +2,6 @@
 <configuration>
     <!-- Включаем стандартные настройки Spring Boot (цвета, формат консоли) -->
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <springProperty name="logPath" source="app.logging.path"/>
     <springProperty name="logstashUrl" source="logstash.url"/>
     <springProfile name="!dev">
         <springProperty name="springAppName" source="spring.application.name" />
@@ -21,7 +20,7 @@
                         </pattern>
                     </pattern>
                     <threadName/>
-                    <arguments/>    <!-- kv() аргументы -->
+                    <arguments/>
                     <mdc/>
 
                     <stackTrace>
@@ -35,19 +34,8 @@
                 </providers>
             </encoder>
         </appender>
-        <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${logPath}/${springAppName}.log</file>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${logPath}/${springAppName}.log.%d{yyyy-MM-dd_HH}</fileNamePattern>
-                <maxHistory>20</maxHistory>
-            </rollingPolicy>
-            <encoder>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss:SSS} [%X{traceId:-}] [%X{spanId:-}] [%thread] [${springAppName}] %logger - %msg%n</pattern>
-            </encoder>
-        </appender>
         <root level="info">
             <appender-ref ref="logstash" />
-<!--            <appender-ref ref="file" />-->
         </root>
     </springProfile>
 </configuration>

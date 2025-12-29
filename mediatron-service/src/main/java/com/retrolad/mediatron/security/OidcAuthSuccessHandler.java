@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OidcAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -28,11 +32,15 @@ public class OidcAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
         OidcUser principal = (OidcUser) authentication.getPrincipal();
         String email = principal.getEmail();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        AuthUserDetails userDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(email);
 
-        String token = jwtService.generateToken((AuthUserDetails) userDetails);
+        log.info("Вход пользователя через систему OAuth2",
+                kv("userId", userDetails.getAuthUser().getId()));
+
+        String token = jwtService.generateToken(userDetails);
 
         String targetUrl = UriComponentsBuilder.fromUriString(frontUrl + "/oauth-success")
                 .queryParam("accessToken", token)

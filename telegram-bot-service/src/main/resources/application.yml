@@ -3,11 +3,17 @@ spring:
     name: mediatron-telegram-bot
   main:
     web-application-type: none
+  profiles:
+    active: ${SPRING_APPLICATION_PROFILE:dev}
 bot:
   name: mediatron_bot
   token: ${TELEGRAM_API_TOKEN}
 mediatron:
   url: http://${BACKEND_HOST:-localhost}:${BACKEND_PORT:-8080}
-logging:
-  level:
-    web: DEBUG
+logstash.url: ${LOGSTASH_URL}
+management:
+  sampling:
+    probability: 1
+  tracing:
+    propagation:
+      type: w3c

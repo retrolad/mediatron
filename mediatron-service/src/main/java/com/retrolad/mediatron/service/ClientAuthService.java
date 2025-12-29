@@ -9,8 +9,12 @@ import com.retrolad.mediatron.repository.AuthUserRepository;
 import com.retrolad.mediatron.security.AuthRole;
 import com.retrolad.mediatron.security.AuthUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClientAuthService {
@@ -26,6 +30,7 @@ public class ClientAuthService {
      */
     public UserProfileDto telegramCreateUser(TelegramClientSignInRequest request) {
         if (userService.getUserByTelegramId(request.telegramId()) != null) {
+            log.warn("Пользователь уже существует", kv("telegramId", request.telegramId()));
             return null;
         }
 
@@ -40,6 +45,8 @@ public class ClientAuthService {
             authUser.getRoles().add(role);
 
             User userProfile = userService.createUserProfile(authUser);
+
+            log.info("Пользователь создан через telegram", kv("telegramId", request.telegramId()));
             return userProfileMapper.toDto(userProfile);
         }
         return null;

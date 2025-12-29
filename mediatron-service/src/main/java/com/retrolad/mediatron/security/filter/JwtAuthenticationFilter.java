@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 // Гарантируем единоразовый вызов фильтра для одного запроса
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -52,6 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             handleUserRequest(token, request);
         } else if ("client".equals(type)) {
             handleClientRequest(token, request);
+        } else {
+            log.warn("Запрос от неизвестного аутентифицированного источника");
         }
 
         filterChain.doFilter(request, response);

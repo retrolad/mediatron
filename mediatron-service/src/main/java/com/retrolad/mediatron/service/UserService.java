@@ -53,7 +53,7 @@ public class UserService {
     public UserProfileDto getUserByTelegramId(Long telegramId) {
         AuthUser authUser = authService.getByTelegramId(telegramId);
         if (authUser == null) {
-            throw new UserNotFoundException("Пользователь с telegram id " + telegramId + " не найден");
+            return null;
         };
 
         Long userId = authUser.getId();

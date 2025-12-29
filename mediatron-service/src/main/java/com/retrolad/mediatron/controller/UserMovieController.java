@@ -30,11 +30,7 @@ public class UserMovieController {
     @PostMapping("/user/watchlist")
     public ResponseEntity<?> addMovieToWatchlist(@RequestBody MovieIdDto movieIdDto,
                                                  @AuthenticationPrincipal AuthUserDetails userDetails) {
-        UserMovieRelation saved = userMovieService.addMovieToUserWatchlist(
-                movieIdDto.movieId(), userDetails.getAuthUser().getId());
-        if (saved == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        userMovieService.addMovieToUserWatchlist(movieIdDto.movieId(), userDetails.getAuthUser().getId());
         return ResponseEntity.ok().build();
     }
 

@@ -39,3 +39,4 @@ build/
 *.env
 .secrets
 **/k8s/*secret*
+/logs/

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: mediatron
+    name: mediatron-backend
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/mediatron
@@ -9,10 +9,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
   security:
     oauth2:
       client:
@@ -27,14 +23,6 @@ spring:
     parameters:
       duplicate-file-mode: WARN
 
-logging:
-  level:
-    org.springframework.boot.web.servlet: DEBUG
-    org.springframework.security.web.FilterChainProxy: DEBUG
-    org.springframework.web.servlet.DispatcherServlet: DEBUG
-
-    root: info
-
 app:
   front:
     url: ${FRONTEND_URL:http://localhost:5173}
@@ -43,6 +31,11 @@ app:
     tmdb-images-url: https://image.tmdb.org/t/p/original
   lang:
     default: ru
+  logging:
+    path: ${user.home}/mediatron/logs/mediatron-service
+
+logstash:
+  url: ${LOGSTASH_URL}
 
 server:
   # Включает поддержку заголовков X-Forwarded-*
@@ -54,3 +47,10 @@ trusted-clients:
       client_id: telegram-bot
       client_secret: ${TELEGRAM_CLIENT_SECRET}
       client_authority: CLIENT
+
+management:
+  sampling:
+    probability: 1
+  tracing:
+    propagation:
+      type: w3c

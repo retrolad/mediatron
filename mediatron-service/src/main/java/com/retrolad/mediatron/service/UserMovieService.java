@@ -14,6 +14,7 @@ import com.retrolad.mediatron.repository.UserMovieRepository;
 import com.retrolad.mediatron.utils.images.ImageSize;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserMovieService {
@@ -31,7 +35,11 @@ public class UserMovieService {
     private final UserMovieMapper userMovieMapper;
 
     public List<UserMovieDto> getUserMovies(UserMovieRequest request) {
-        Page<UserMovieRelation> relations = userMovieRepository.findAll((root, query, builder) -> {
+        Page<UserMovieRelation> relations = userMovieRepository.findAll((
+                root,
+                query,
+                builder) -> {
+
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(builder.equal(root.get("user").get("id"), request.userId()));
@@ -77,15 +85,19 @@ public class UserMovieService {
         User user = userService.getUserById(userId);
         Movie movie = movieService.getById(movieId);
 
-        UserMovieRelation usr = new UserMovieRelation();
-        usr.setId(new UserMovieRelationId(userId, movieId));
+        UserMovieRelation umr = new UserMovieRelation();
+        umr.setId(new UserMovieRelationId(userId, movieId));
 
-        usr.setMovie(movie);
-        usr.setUser(user);
+        umr.setMovie(movie);
+        umr.setUser(user);
 
-        usr.setIsInWatchlist(true);
+        umr.setIsInWatchlist(true);
 
-        return userMovieRepository.save(usr);
+        UserMovieRelation saved = userMovieRepository.save(umr);
+
+        log.info("Фильм добавлен в `watchlist` пользователя",
+                kv("movieId", movieId));
+        return saved;
     }
 
     public void removeMovieFromWatchlist(Long movieId, Long userId) {
@@ -93,5 +105,8 @@ public class UserMovieService {
         Movie movie = movieService.getById(movieId);
 
         userMovieRepository.deleteById(new UserMovieRelationId(user.getId(), movie.getId()));
+
+        log.info("Фильм удален из списка `watchlist` пользователя",
+                kv("movieId", movieId));
     }
 }
