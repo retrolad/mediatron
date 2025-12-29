@@ -4,7 +4,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty name="logPath" source="app.logging.path"/>
     <springProperty name="logstashUrl" source="logstash.url"/>
-    <springProfile name="!dev">
+    <springProfile name="prod">
         <springProperty name="springAppName" source="spring.application.name" />
         <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
             !-- Адрес и порт, где Logstash слушает входящие данные -->
